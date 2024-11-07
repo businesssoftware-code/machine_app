@@ -1,0 +1,6 @@
+# Flutter build directories
+/build/
+/android/app/build/
+/ios/Flutter/App.framework
+/ios/Flutter/Flutter.framework
+/.dart_tool
