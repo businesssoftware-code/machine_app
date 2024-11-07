@@ -74,10 +74,10 @@ class PrimingCard extends StatelessWidget {
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Text('L1', style: TextStyle(color: Colors.white, fontSize: 16)),
-                    Text('L2', style: TextStyle(color: Colors.white, fontSize: 16)),
-                    Text('L3', style: TextStyle(color: Colors.white, fontSize: 16)),
-                    Text('L4', style: TextStyle(color: Colors.white, fontSize: 16)),
+                    Text('Milk', style: TextStyle(color: Colors.white, fontSize: 16)),
+                    Text('Water', style: TextStyle(color: Colors.white, fontSize: 16)),
+                    Text('Curd', style: TextStyle(color: Colors.white, fontSize: 16)),
+                    Text('Kool-M', style: TextStyle(color: Colors.white, fontSize: 16)),
                   ],
                 ),
                 SizedBox(height: screenHeight * 0.01),
