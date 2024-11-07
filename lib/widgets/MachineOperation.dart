@@ -4,18 +4,18 @@ import 'package:google_fonts/google_fonts.dart';
 class MachineOperationCard extends StatelessWidget {
   final String title;
   final String imageUrl;
-  final String button1Label;
+  final String? button1Label;
   final String button2Label;
-  final VoidCallback onButton1Pressed;
+  final VoidCallback? onButton1Pressed;
   final VoidCallback onButton2Pressed;
 
   const MachineOperationCard({
     super.key,
     required this.title,
     required this.imageUrl,
-    required this.button1Label,
+     this.button1Label,
     required this.button2Label,
-    required this.onButton1Pressed,
+     this.onButton1Pressed,
     required this.onButton2Pressed,
   });
 
@@ -69,8 +69,12 @@ class MachineOperationCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buildButton(button1Label, onButton1Pressed,context),
-              SizedBox(width: screenWidth * 0.02), // Space between buttons
+              if(button1Label != null && onButton1Pressed != null)...[
+
+                _buildButton(button1Label! , onButton1Pressed!,context),
+                SizedBox(width: screenWidth * 0.02), // Space between buttons
+
+              ], 
               _buildButton(button2Label, onButton2Pressed,context),
             ],
           ),

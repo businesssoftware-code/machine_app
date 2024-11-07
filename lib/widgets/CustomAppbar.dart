@@ -9,6 +9,7 @@ class CustomAppBar extends StatelessWidget {
   final double screenWidth;
   final MenuControllers menuController = Get.find();
 
+
   CustomAppBar({
     super.key,
     required this.onReconnect,
@@ -92,6 +93,11 @@ class CustomAppBar extends StatelessWidget {
         Get.toNamed(route); // Navigate to the selected route
       },
       child: Obx(() {
+        print(route);
+        print("dldf");
+        print(menuController.selectedRoute.value);
+
+
         bool isSelected = menuController.selectedRoute.value == route;
         return Container(
           padding: EdgeInsets.symmetric(vertical: screenHeight * 0.015,horizontal: screenWidth * 0.017),

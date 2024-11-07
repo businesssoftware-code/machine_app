@@ -62,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
           setState(() {
             String currentStage = decodedEvent['data']['stage'];
             stationStages['station1'] = currentStage;
-            if (currentStage == 'completed') {
+            if (currentStage == 'clear') {  
               Future.delayed(const Duration(seconds: 2), () {
                 setState(() {
                   stationStages['station1'] = 'vacant';
@@ -75,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
           setState(() {
             String currentStage = decodedEvent['data']['stage'];
             stationStages['station2'] = currentStage;
-            if (currentStage == 'completed') {
+            if (currentStage == 'clear') {
               Future.delayed(const Duration(seconds: 2), () {
                 setState(() {
                   stationStages['station2'] = 'vacant';
