@@ -93,10 +93,6 @@ class CustomAppBar extends StatelessWidget {
         Get.toNamed(route); // Navigate to the selected route
       },
       child: Obx(() {
-        print(route);
-        print("dldf");
-        print(menuController.selectedRoute.value);
-
 
         bool isSelected = menuController.selectedRoute.value == route;
         return Container(
