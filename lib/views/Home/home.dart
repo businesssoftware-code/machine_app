@@ -38,7 +38,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (widget.drinkName != null) {
       _drinkName = widget.drinkName;
-      _sendStartProcessing();
+      _showScanner = false;
+      // _sendStartProcessing(); 
     }
   }
 
