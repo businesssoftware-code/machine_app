@@ -206,7 +206,7 @@ class _HomeScreenState extends State<HomeScreen> {
       {'name': 'Curd', 'quantity': '10000', 'url': 'assets/liquids/curdFrame.png'},
       {'name': 'Kool-M', 'quantity': '10000', 'url': 'assets/liquids/koolMFrame.png'}
     ];
-
+    
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
@@ -285,7 +285,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       )
                           : Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        // mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
                             _drinkName ?? 'Unknown Drink',
@@ -294,6 +294,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 .primaryTextTheme
                                 .displayLarge,
                           ),
+
+
                           SizedBox(height: screenHeight * 0.02),
                           ElevatedButton(
                             onPressed: isAnyStationVacant
