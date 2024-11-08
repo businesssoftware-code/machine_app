@@ -207,15 +207,15 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
                       Row(
                         children: [
                           MachineOperationCard(
-                            title: 'Machine',
+                            title: 'Daily Priming',
                             imageUrl: 'assets/blender.png',
                             // button1Label: 'stop',
-                            button2Label: 'Daily Priming',
+                            button2Label: 'Start',
                             // onButton1Pressed: () {
                             //   _sendApiRequest('http://192.168.0.65:3001/machineStatus?status=inactive');
                             // },
                             onButton2Pressed: () {
-                              _sendApiRequest('http://192.168.0.65:3001/machineStatus?status=active');
+                              _sendApiRequest('http://192.168.0.65:3001/dailyPriming');
                             },
                           ),
                           MachineOperationCard(
