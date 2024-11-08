@@ -60,11 +60,15 @@ class _HomeScreenState extends State<HomeScreen> {
           _showSnackBar2(decodedEvent['data']['message']);
         }
         if (decodedEvent['event'] == 'station1') {
+          print(decodedEvent['data']);
+          print("dhskhfkfhhffhk");
+
           setState(() {
             String currentStage = decodedEvent['data']['stage'];
+            
             stationStages['station1'] = currentStage;
-            if (currentStage == 'clear') {  
-              Future.delayed(const Duration(seconds: 2), () {
+            if (currentStage == 'Clear') {  
+              Future.delayed(const Duration(seconds: 1), () {
                 setState(() {
                   stationStages['station1'] = 'vacant';
                 });
@@ -76,8 +80,8 @@ class _HomeScreenState extends State<HomeScreen> {
           setState(() {
             String currentStage = decodedEvent['data']['stage'];
             stationStages['station2'] = currentStage;
-            if (currentStage == 'clear') {
-              Future.delayed(const Duration(seconds: 2), () {
+            if (currentStage == 'Clear') {
+              Future.delayed(const Duration(seconds: 1), () {
                 setState(() {
                   stationStages['station2'] = 'vacant';
                 });
