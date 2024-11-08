@@ -93,7 +93,7 @@ class CustomAppBar extends StatelessWidget {
         Get.toNamed(route); // Navigate to the selected route
       },
       child: Obx(() {
-
+        
         bool isSelected = menuController.selectedRoute.value == route;
         return Container(
           padding: EdgeInsets.symmetric(vertical: screenHeight * 0.015,horizontal: screenWidth * 0.017),
