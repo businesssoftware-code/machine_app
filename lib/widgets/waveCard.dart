@@ -27,10 +27,10 @@ class WaveCard extends StatelessWidget {
             children: [
               Text(
                 '$quantity ml',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: quantity < 400 ? Colors.red :  Colors.white,
                 ),
               ),
               Expanded(

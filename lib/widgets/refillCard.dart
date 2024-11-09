@@ -39,15 +39,22 @@ class _RefillCardState extends State<RefillCard> {
   // Save quantity to local storage and update notifier
   Future<void> _saveQuantity(int additionalQuantity) async {
     final prefs = await SharedPreferences.getInstance();
-    int updatedQuantity = additionalQuantity;
-    await prefs.setInt(widget.name, updatedQuantity);
 
-    setState(() {
-      quantity = updatedQuantity;
-    });
+    if(additionalQuantity >= 400 && additionalQuantity <= 10000){
 
-    // Update the global notifier
-    quantityNotifier.value = {...quantityNotifier.value, widget.name: quantity};
+        int updatedQuantity = additionalQuantity;
+        await prefs.setInt(widget.name, updatedQuantity);
+
+        setState(() {
+          quantity = updatedQuantity;
+        });
+
+        // Update the global notifier
+        quantityNotifier.value = {...quantityNotifier.value, widget.name: quantity};
+
+    }
+
+
   }
 
   @override
