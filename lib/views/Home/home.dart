@@ -1,8 +1,13 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:machine_basil/controller/ValueNotifier.dart';
+import 'package:machine_basil/provider/sharedPrefernce.dart';
+import 'package:machine_basil/utils/drinkHelper.dart';
 import 'package:machine_basil/widgets/curvedLine.dart';
 import 'package:machine_basil/widgets/waveCard.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:http/http.dart' as http;
@@ -11,7 +16,8 @@ import '../../widgets/CustomAppbar.dart';
 
 class HomeScreen extends StatefulWidget {
   final String? drinkName;
-  const HomeScreen({super.key, this.drinkName});
+  final bool? canPrepare;
+  const HomeScreen({super.key, this.drinkName, this.canPrepare});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -25,11 +31,14 @@ class _HomeScreenState extends State<HomeScreen> {
   final String _webSocketUrl = 'ws://192.168.0.65:3003';
   String? _drinkName;
   bool _showScanner = true;
+  bool canPrepare = false;
 
   Map<String, String> stationStages = {
     'station1': 'vacant',
     'station2': 'vacant',
   };
+
+  final PreferencesService _preferencesService = PreferencesService();
 
   @override
   void initState() {
@@ -39,14 +48,30 @@ class _HomeScreenState extends State<HomeScreen> {
     if (widget.drinkName != null) {
       _drinkName = widget.drinkName;
       _showScanner = false;
-      // _sendStartProcessing(); 
+      if (widget.canPrepare != null) {
+        canPrepare = widget.canPrepare!;
+      }
+
+      // _sendStartProcessing();
     }
+  }
+
+  Future<void> _loadStationStages() async {
+    stationStages = await _preferencesService.loadStationStages();
+    setState(() {}); // Update UI with loaded values
+  }
+
+  void _updateStationStage(String station, String stage) {
+    setState(() {
+      stationStages[station] = stage;
+    });
+    _preferencesService.saveStationStages(stationStages);
   }
 
   void _connectWebSocket() {
     _channel = IOWebSocketChannel.connect(_webSocketUrl);
     _channel.stream.listen(
-          (event) {
+      (event) async {
         _updateConnectionStatus(true);
         final decodedEvent = jsonDecode(event);
 
@@ -55,22 +80,33 @@ class _HomeScreenState extends State<HomeScreen> {
             _drinkName = decodedEvent['data']['drinkName'];
             _showScanner = false;
           });
+          int milk = decodedEvent['data']['Milk'];
+          int water = decodedEvent['data']['Water'];
+          int curd = decodedEvent['data']['Curd'];
+          int koolM = decodedEvent['data']['Kool-M'];
+          canPrepare = await canPrepareDrink(milk, water, curd, koolM);
         }
         if (decodedEvent['event'] == 'error_logs') {
           _showSnackBar2(decodedEvent['data']['message']);
         }
         if (decodedEvent['event'] == 'station1') {
           print(decodedEvent['data']);
-          print("dhskhfkfhhffhk");
 
           setState(() {
             String currentStage = decodedEvent['data']['stage'];
-            
-            stationStages['station1'] = currentStage;
-            if (currentStage == 'Clear') {  
+
+            _updateStationStage('station1', currentStage);
+            if (currentStage == 'Blending') {
+              int milk = decodedEvent['data']['Milk'];
+              int water = decodedEvent['data']['Water'];
+              int curd = decodedEvent['data']['Curd'];
+              int koolM = decodedEvent['data']['Kool-M'];
+              updateIngredientQuantities(milk, water, curd, koolM);
+            }
+            if (currentStage == 'Clear') {
               Future.delayed(const Duration(seconds: 1), () {
                 setState(() {
-                  stationStages['station1'] = 'vacant';
+                  _updateStationStage('station1', 'vacant');
                 });
               });
             }
@@ -79,11 +115,18 @@ class _HomeScreenState extends State<HomeScreen> {
         if (decodedEvent['event'] == 'station2') {
           setState(() {
             String currentStage = decodedEvent['data']['stage'];
-            stationStages['station2'] = currentStage;
+            _updateStationStage('station2', currentStage);
+            if (currentStage == 'Blending') {
+              int milk = decodedEvent['data']['Milk'];
+              int water = decodedEvent['data']['Water'];
+              int curd = decodedEvent['data']['Curd'];
+              int koolM = decodedEvent['data']['Kool-M'];
+              updateIngredientQuantities(milk, water, curd, koolM);
+            }
             if (currentStage == 'Clear') {
               Future.delayed(const Duration(seconds: 1), () {
                 setState(() {
-                  stationStages['station2'] = 'vacant';
+                  _updateStationStage('station2', 'vacant');
                 });
               });
             }
@@ -94,8 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
         _updateConnectionStatus(false);
         print("WebSocket Error: $error");
       },
-
-    onDone: () {
+      onDone: () {
         _updateConnectionStatus(false);
         print("WebSocket connection closed.");
       },
@@ -133,11 +175,9 @@ class _HomeScreenState extends State<HomeScreen> {
           });
         } else {
           _showSnackBar("Failed to start processing: ${response.statusCode}");
-
         }
       } catch (e) {
         _showSnackBar("Error occurred: $e");
-
       } finally {
         setState(() {
           isLoading = false;
@@ -184,7 +224,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-
   void _reconnect() {
     _channel.sink.close();
     _connectWebSocket();
@@ -205,17 +244,33 @@ class _HomeScreenState extends State<HomeScreen> {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     final List<Map<String, dynamic>> waveCardData = [
-      {'name': 'Milk', 'quantity': '10000', 'url': 'assets/liquids/milkFrame.png'},
-      {'name': 'Water', 'quantity': '10000', 'url': 'assets/liquids/waterFrame.png'},
-      {'name': 'Curd', 'quantity': '10000', 'url': 'assets/liquids/curdFrame.png'},
-      {'name': 'Kool-M', 'quantity': '10000', 'url': 'assets/liquids/koolMFrame.png'}
+      {
+        'name': 'Milk',
+        'quantity': '10000',
+        'url': 'assets/liquids/milkFrame.png'
+      },
+      {
+        'name': 'Water',
+        'quantity': '10000',
+        'url': 'assets/liquids/waterFrame.png'
+      },
+      {
+        'name': 'Curd',
+        'quantity': '10000',
+        'url': 'assets/liquids/curdFrame.png'
+      },
+      {
+        'name': 'Kool-M',
+        'quantity': '10000',
+        'url': 'assets/liquids/koolMFrame.png'
+      }
     ];
-    
+
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: [
-           Column(
+          Column(
             children: <Widget>[
               SizedBox(height: screenHeight * 0.06),
               CustomAppBar(
@@ -230,91 +285,92 @@ class _HomeScreenState extends State<HomeScreen> {
                   Expanded(
                     child: _showSuccessScreen
                         ? Center(
-                      child: Container(
-
-                        child: Image.asset(
-                          'assets/OrderPlaced.png',
-                          width: screenWidth * 0.8,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    )
-                        :SizedBox(
-                      height: 300,
-                      child: _showScanner
-                          ? Stack(
-                        children: [
-                          Positioned(
-                            top: screenHeight * 0.04,
-                            left: 0,
-                            right: 0,
-                            bottom: 0,
                             child: Container(
-                              decoration: const BoxDecoration(
-                                image: DecorationImage(
-                                  image: AssetImage('assets/scanImage.png'),
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Column(
-                            children: [
-                              Center(
-                                child: Text(
-                                  'let\'s scan the\ningredient',
-                                  textAlign: TextAlign.center,
-                                  style: Theme.of(context)
-                                      .primaryTextTheme
-                                      .displayLarge,
-                                ),
-                              ),
-                              Center(
-                                child: Text(
-                                  'sachet',
-                                  textAlign: TextAlign.center,
-                                  style: Theme.of(context)
-                                      .primaryTextTheme
-                                      .displayLarge!
-                                      .copyWith(fontWeight: FontWeight.normal),
-                                ),
-                              ),
-                              Image.asset(
-                                'assets/curvedLine.png',
-                                width: screenWidth * 0.18,
+                              child: Image.asset(
+                                'assets/OrderPlaced.png',
+                                width: screenWidth * 0.8,
                                 fit: BoxFit.contain,
                               ),
-                            ],
+                            ),
                           )
-                        ],
-                      )
-                          : Column(
-                        // mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            _drinkName ?? 'Unknown Drink',
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context)
-                                .primaryTextTheme
-                                .displayLarge,
+                        : SizedBox(
+                            height: 300,
+                            child: _showScanner
+                                ? Stack(
+                                    children: [
+                                      Positioned(
+                                        top: screenHeight * 0.04,
+                                        left: 0,
+                                        right: 0,
+                                        bottom: 0,
+                                        child: Container(
+                                          decoration: const BoxDecoration(
+                                            image: DecorationImage(
+                                              image: AssetImage(
+                                                  'assets/scanImage.png'),
+                                              fit: BoxFit.fill,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Column(
+                                        children: [
+                                          Center(
+                                            child: Text(
+                                              'let\'s scan the\ningredient',
+                                              textAlign: TextAlign.center,
+                                              style: Theme.of(context)
+                                                  .primaryTextTheme
+                                                  .displayLarge,
+                                            ),
+                                          ),
+                                          Center(
+                                            child: Text(
+                                              'sachet',
+                                              textAlign: TextAlign.center,
+                                              style: Theme.of(context)
+                                                  .primaryTextTheme
+                                                  .displayLarge!
+                                                  .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.normal),
+                                            ),
+                                          ),
+                                          Image.asset(
+                                            'assets/curvedLine.png',
+                                            width: screenWidth * 0.18,
+                                            fit: BoxFit.contain,
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  )
+                                : Column(
+                                    // mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        _drinkName ?? 'Unknown Drink',
+                                        textAlign: TextAlign.center,
+                                        style: Theme.of(context)
+                                            .primaryTextTheme
+                                            .displayLarge,
+                                      ),
+                                      SizedBox(height: screenHeight * 0.02),
+                                      ElevatedButton(
+                                        onPressed:
+                                            isAnyStationVacant && canPrepare
+                                                ? () {
+                                                    _sendStartProcessing();
+                                                    setState(() {
+                                                      _showScanner = true;
+                                                    });
+                                                  }
+                                                : null,
+                                        child: const Text('Start'),
+                                      ),
+                                    ],
+                                  ),
                           ),
-
-
-                          SizedBox(height: screenHeight * 0.02),
-                          ElevatedButton(
-                            onPressed: isAnyStationVacant
-                                ? () {
-                              _sendStartProcessing();
-                              setState(() {
-                                _showScanner = true;
-                              });
-                            }
-                                : null,
-                            child: const Text('Start'),
-                          ),
-                        ],
-                      ),
-                    ),
                   ),
                   Expanded(
                     child: SizedBox(
@@ -322,7 +378,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: GridView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           crossAxisSpacing: 4.0,
                           mainAxisSpacing: 4.0,

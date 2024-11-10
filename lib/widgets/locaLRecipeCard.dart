@@ -1,17 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
-import '../views/Home/home.dart';
-
-
-class LocalRecipeCard extends StatelessWidget {
+class LocalRecipeCard extends StatefulWidget {
   final String name;
   final String imageUrl;
 
   const LocalRecipeCard({
-    super.key,
+    Key? key,
     required this.name,
     required this.imageUrl,
-  });
+  }) : super(key: key);
+
+  @override
+  State<LocalRecipeCard> createState() => _LocalRecipeCardState();
+}
+
+class _LocalRecipeCardState extends State<LocalRecipeCard> {
+  bool isLoading = false;
+  bool _showSuccessScreen = false;
+
+  Future<void> _sendLocalRecipes(String drinkName) async {
+    setState(() {
+      isLoading = true;
+    });
+
+    const String apiUrl = 'http://192.168.0.65:3001/simulateScanner';
+    final Uri uri = Uri.parse('$apiUrl?recipe=$drinkName');
+
+    try {
+      final response = await http.get(uri);
+      if (response.statusCode == 200) {
+        // setState(() {
+        //   _showSuccessScreen = true;
+        // });
+        // Hide success screen after 5 seconds
+        // Future.delayed(const Duration(seconds: 5), () {
+        //   setState(() {
+        //     _showSuccessScreen = false;
+        //   });
+        // });
+      }
+    } catch (e) {
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +74,7 @@ class LocalRecipeCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
             ),
             child: Image.asset(
-              imageUrl,
+              widget.imageUrl,
               height: screenHeight * 0.16,
               width: screenWidth * 0.4,
               fit: BoxFit.cover,
@@ -48,21 +83,18 @@ class LocalRecipeCard extends StatelessWidget {
           SizedBox(height: screenHeight * 0.01),
           // Recipe name
           Text(
-            name,
+            widget.name,
             style: Theme.of(context).primaryTextTheme.headlineSmall,
             textAlign: TextAlign.center,
           ),
           SizedBox(height: screenHeight * 0.01),
           // Make button
           ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => HomeScreen(drinkName: name),
-                ),
-              );
-            },
+            onPressed: isLoading
+                ? null
+                : () {
+                    _sendLocalRecipes(widget.name);
+                  },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
               padding: EdgeInsets.symmetric(
@@ -73,14 +105,37 @@ class LocalRecipeCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
-            child: Text(
-              'make',
-              style: Theme.of(context).primaryTextTheme.headlineSmall!.copyWith(
-                color: const Color(0xFF0E0E0E),
-                fontWeight: FontWeight.w400,
+            child: isLoading
+                ? const SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Color(0xFF0E0E0E),
+                    ),
+                  )
+                : Text(
+                    'make',
+                    style: Theme.of(context)
+                        .primaryTextTheme
+                        .headlineSmall!
+                        .copyWith(
+                          color: const Color(0xFF0E0E0E),
+                          fontWeight: FontWeight.w400,
+                        ),
+                  ),
+          ),
+          if (_showSuccessScreen)
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Text(
+                'Recipe started successfully!',
+                style: Theme.of(context)
+                    .primaryTextTheme
+                    .headlineSmall!
+                    .copyWith(color: Colors.green),
               ),
             ),
-          ),
         ],
       ),
     );

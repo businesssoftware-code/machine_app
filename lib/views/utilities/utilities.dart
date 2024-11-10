@@ -4,10 +4,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:machine_basil/provider/sharedPrefernce.dart';
+import 'package:machine_basil/utils/drinkHelper.dart';
+import 'package:machine_basil/views/Home/home.dart';
 import 'package:machine_basil/widgets/CustomAppbar.dart';
 import 'package:machine_basil/widgets/MachineOperation.dart';
 import 'package:machine_basil/widgets/UtilitiesCardCompressed.dart';
 import 'package:machine_basil/widgets/UtilitiesCardLarge.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -22,6 +26,11 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
   late WebSocketChannel _channel;
   bool _isConnected = false;
   bool isLoading = false;
+  Map<String, String> stationStages = {
+    'station1': 'vacant',
+    'station2': 'vacant',
+  };
+  final PreferencesService _preferencesService = PreferencesService();
   final String _webSocketUrl = 'ws://192.168.0.65:3003';
 
   @override
@@ -30,22 +39,92 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
     _connectWebSocket();
   }
 
+  Future<void> _loadStationStages() async {
+    stationStages = await _preferencesService.loadStationStages();
+    setState(() {});
+  }
+
+  void _updateStationStage(String station, String stage) {
+    setState(() {
+      stationStages[station] = stage;
+    });
+    _preferencesService.saveStationStages(stationStages);
+  }
+
   void _connectWebSocket() {
     _channel = IOWebSocketChannel.connect(_webSocketUrl);
-    _channel.stream.listen((event) {
+    _channel.stream.listen((event) async {
       setState(() {
         _isConnected = true;
       });
+
       final decodedEvent = jsonDecode(event);
-      if (decodedEvent['event'] == 'error_logs') {
-        _showSnackBar2(decodedEvent['data']['message'], Colors.black, Colors.white);
+      if (decodedEvent['event'] == 'scanned-sachet') {
+        int milk = decodedEvent['data']['Milk'];
+        int water = decodedEvent['data']['Water'];
+        int curd = decodedEvent['data']['Curd'];
+        int koolM = decodedEvent['data']['Kool-M'];
+        bool canPrepare = await canPrepareDrink(milk, water, curd, koolM);
+        setState(() {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomeScreen(
+                  drinkName: decodedEvent['data']['drinkName'],
+                  canPrepare: canPrepare),
+            ),
+          );
+        });
+      }
+
+      if (decodedEvent['event'] == 'station1') {
+        print(decodedEvent['data']);
+
+        setState(() {
+          String currentStage = decodedEvent['data']['stage'];
+
+          _updateStationStage('station1', currentStage);
+          if (currentStage == 'Blending') {
+            int milk = decodedEvent['data']['Milk'];
+            int water = decodedEvent['data']['Water'];
+            int curd = decodedEvent['data']['Curd'];
+            int koolM = decodedEvent['data']['Kool-M'];
+            updateIngredientQuantities(milk, water, curd, koolM);
+          }
+          if (currentStage == 'Clear') {
+            Future.delayed(const Duration(seconds: 1), () {
+              setState(() {
+                _updateStationStage('station1', 'vacant');
+              });
+            });
+          }
+        });
+      }
+      if (decodedEvent['event'] == 'station2') {
+        setState(() {
+          String currentStage = decodedEvent['data']['stage'];
+          _updateStationStage('station2', currentStage);
+          if (currentStage == 'Blending') {
+            int milk = decodedEvent['data']['Milk'];
+            int water = decodedEvent['data']['Water'];
+            int curd = decodedEvent['data']['Curd'];
+            int koolM = decodedEvent['data']['Kool-M'];
+            updateIngredientQuantities(milk, water, curd, koolM);
+          }
+          if (currentStage == 'Clear') {
+            Future.delayed(const Duration(seconds: 1), () {
+              setState(() {
+                _updateStationStage('station2', 'vacant');
+              });
+            });
+          }
+        });
       }
     }, onDone: () {
       setState(() {
         _isConnected = false;
       });
     });
-
   }
 
   void _reconnect() {
@@ -55,22 +134,21 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
 
   Future<void> _sendApiRequest(String url) async {
     setState(() {
-      isLoading = true; // Show loader
+      isLoading = true;
     });
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         _showSnackBar('Request successful!', Colors.black, Colors.white);
       } else {
-        _showSnackBar('Request failed with status: ${response.statusCode}', Colors.black, Colors.white);
-
+        _showSnackBar('Request failed with status: ${response.statusCode}',
+            Colors.black, Colors.white);
       }
     } catch (e) {
       _showSnackBar('Error: $e', Colors.black, Colors.white);
-
     } finally {
       setState(() {
-        isLoading = false; // Hide loader
+        isLoading = false;
       });
     }
   }
@@ -113,17 +191,15 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Colors.black, // Set background to black for theme
+      backgroundColor: Colors.black,
       body: Stack(
         children: [
-
           Column(
             children: [
               SizedBox(height: screenHeight * 0.06),
@@ -174,14 +250,16 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
                             title: 'Blender Cleaning',
                             imageUrl: 'assets/blender.png',
                             onStartPressed: () {
-                              _sendApiRequest('http://192.168.0.65:3001/blender_clean');
+                              _sendApiRequest(
+                                  'http://192.168.0.65:3001/blender_clean');
                             },
                           ),
                           UtilitiesCardSmall(
                             title: 'Homing',
                             imageUrl: 'assets/blender.png',
                             onStartPressed: () {
-                              _sendApiRequest('http://192.168.0.65:3001/homing');
+                              _sendApiRequest(
+                                  'http://192.168.0.65:3001/homing');
                             },
                           ),
                         ],
@@ -191,16 +269,24 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
                         title: 'Priming',
                         imageUrl: 'assets/blender.png',
                         onStartPressed: [
-                              () => _sendApiRequest('http://192.168.0.65:3001/liquids?liqNum=1&liqAction=start'),
-                              () => _sendApiRequest('http://192.168.0.65:3001/liquids?liqNum=2&liqAction=start'),
-                              () => _sendApiRequest('http://192.168.0.65:3001/liquids?liqNum=3&liqAction=start'),
-                              () => _sendApiRequest('http://192.168.0.65:3001/liquids?liqNum=4&liqAction=start'),
+                          () => _sendApiRequest(
+                              'http://192.168.0.65:3001/liquids?liqNum=1&liqAction=start'),
+                          () => _sendApiRequest(
+                              'http://192.168.0.65:3001/liquids?liqNum=2&liqAction=start'),
+                          () => _sendApiRequest(
+                              'http://192.168.0.65:3001/liquids?liqNum=3&liqAction=start'),
+                          () => _sendApiRequest(
+                              'http://192.168.0.65:3001/liquids?liqNum=4&liqAction=start'),
                         ],
                         onStopPressed: [
-                              () => _sendApiRequest('http://192.168.0.65:3001/liquids?liqNum=1&liqAction=stop'),
-                              () => _sendApiRequest('http://192.168.0.65:3001/liquids?liqNum=2&liqAction=stop'),
-                              () => _sendApiRequest('http://192.168.0.65:3001/liquids?liqNum=3&liqAction=stop'),
-                              () => _sendApiRequest('http://192.168.0.65:3001/liquids?liqNum=4&liqAction=stop'),
+                          () => _sendApiRequest(
+                              'http://192.168.0.65:3001/liquids?liqNum=1&liqAction=stop'),
+                          () => _sendApiRequest(
+                              'http://192.168.0.65:3001/liquids?liqNum=2&liqAction=stop'),
+                          () => _sendApiRequest(
+                              'http://192.168.0.65:3001/liquids?liqNum=3&liqAction=stop'),
+                          () => _sendApiRequest(
+                              'http://192.168.0.65:3001/liquids?liqNum=4&liqAction=stop'),
                         ],
                       ),
                       SizedBox(height: screenHeight * 0.01),
@@ -215,7 +301,8 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
                             //   _sendApiRequest('http://192.168.0.65:3001/machineStatus?status=inactive');
                             // },
                             onButton2Pressed: () {
-                              _sendApiRequest('http://192.168.0.65:3001/dailyPriming');
+                              _sendApiRequest(
+                                  'http://192.168.0.65:3001/dailyPriming');
                             },
                           ),
                           MachineOperationCard(
@@ -224,10 +311,12 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
                             button1Label: 'active',
                             button2Label: 'inactive',
                             onButton1Pressed: () {
-                              _sendApiRequest('http://192.168.0.65:3001/machineStatus?status=active');
+                              _sendApiRequest(
+                                  'http://192.168.0.65:3001/machineStatus?status=active');
                             },
                             onButton2Pressed: () {
-                              _sendApiRequest('http://192.168.0.65:3001/machineStatus?status=inactive');
+                              _sendApiRequest(
+                                  'http://192.168.0.65:3001/machineStatus?status=inactive');
                             },
                           ),
                         ],
@@ -243,7 +332,8 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                 child: Container(
-                  color: Colors.black.withOpacity(0.6), // Glass effect background
+                  color:
+                      Colors.black.withOpacity(0.6), // Glass effect background
                   alignment: Alignment.center,
                   child: const SizedBox(
                     height: 30,
