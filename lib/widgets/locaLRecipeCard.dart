@@ -30,22 +30,38 @@ class _LocalRecipeCardState extends State<LocalRecipeCard> {
     try {
       final response = await http.get(uri);
       if (response.statusCode == 200) {
-        // setState(() {
-        //   _showSuccessScreen = true;
-        // });
+        setState(() {
+          _showSuccessScreen = true;
+        });
         // Hide success screen after 5 seconds
-        // Future.delayed(const Duration(seconds: 5), () {
-        //   setState(() {
-        //     _showSuccessScreen = false;
-        //   });
-        // });
+        Future.delayed(const Duration(seconds: 5), () {
+          setState(() {
+            _showSuccessScreen = false;
+          });
+        });
+      } else {
+        _showSnackBar("Failed to start processing: ${response.statusCode}");
       }
     } catch (e) {
+      _showSnackBar("Error occurred: $e");
     } finally {
       setState(() {
         isLoading = false;
       });
     }
+  }
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: const TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.black,
+        duration: const Duration(seconds: 2),
+      ),
+    );
   }
 
   @override

@@ -2,8 +2,10 @@ import 'dart:ui';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:machine_basil/controller/MenuController.dart';
 import 'package:machine_basil/provider/sharedPrefernce.dart';
 import 'package:machine_basil/utils/drinkHelper.dart';
 import 'package:machine_basil/views/Home/home.dart';
@@ -11,7 +13,6 @@ import 'package:machine_basil/widgets/CustomAppbar.dart';
 import 'package:machine_basil/widgets/MachineOperation.dart';
 import 'package:machine_basil/widgets/UtilitiesCardCompressed.dart';
 import 'package:machine_basil/widgets/UtilitiesCardLarge.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -24,31 +25,28 @@ class UtilitiesScreen extends StatefulWidget {
 
 class _UtilitiesScreenState extends State<UtilitiesScreen> {
   late WebSocketChannel _channel;
+  late MenuControllers menuController; // Define menuController
+  late PreferencesService _preferencesService;
   bool _isConnected = false;
   bool isLoading = false;
   Map<String, String> stationStages = {
     'station1': 'vacant',
     'station2': 'vacant',
   };
-  final PreferencesService _preferencesService = PreferencesService();
+
   final String _webSocketUrl = 'ws://192.168.0.65:3003';
 
   @override
   void initState() {
     super.initState();
+    menuController = Get.put(MenuControllers());
+    _preferencesService = PreferencesService();
     _connectWebSocket();
   }
 
-  Future<void> _loadStationStages() async {
-    stationStages = await _preferencesService.loadStationStages();
-    setState(() {});
-  }
-
   void _updateStationStage(String station, String stage) {
-    setState(() {
-      stationStages[station] = stage;
-    });
-    _preferencesService.saveStationStages(stationStages);
+    // Update the station stage and save to SharedPreferences
+    _preferencesService.updateStationStage(station, stage);
   }
 
   void _connectWebSocket() {
@@ -65,60 +63,62 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
         int curd = decodedEvent['data']['Curd'];
         int koolM = decodedEvent['data']['Kool-M'];
         bool canPrepare = await canPrepareDrink(milk, water, curd, koolM);
-        setState(() {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => HomeScreen(
-                  drinkName: decodedEvent['data']['drinkName'],
-                  canPrepare: canPrepare),
+
+        // Use menuController to update route
+        menuController.updateRoute('/home');
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(
+              drinkName: decodedEvent['data']['drinkName'],
+              canPrepare: canPrepare,
             ),
-          );
-        });
+          ),
+        );
       }
 
       if (decodedEvent['event'] == 'station1') {
-        print(decodedEvent['data']);
+        String currentStage = decodedEvent['data']['stage'];
+        _updateStationStage('station1', currentStage);
 
-        setState(() {
-          String currentStage = decodedEvent['data']['stage'];
+        if (currentStage == 'Blending') {
+          int milk = decodedEvent['data']['Milk'];
+          int water = decodedEvent['data']['Water'];
+          int curd = decodedEvent['data']['Curd'];
+          int koolM = decodedEvent['data']['Kool-M'];
+          updateIngredientQuantities(milk, water, curd, koolM);
+        }
 
-          _updateStationStage('station1', currentStage);
-          if (currentStage == 'Blending') {
-            int milk = decodedEvent['data']['Milk'];
-            int water = decodedEvent['data']['Water'];
-            int curd = decodedEvent['data']['Curd'];
-            int koolM = decodedEvent['data']['Kool-M'];
-            updateIngredientQuantities(milk, water, curd, koolM);
-          }
-          if (currentStage == 'Clear') {
-            Future.delayed(const Duration(seconds: 1), () {
-              setState(() {
-                _updateStationStage('station1', 'vacant');
-              });
-            });
-          }
-        });
+        if (currentStage == 'Clear') {
+          Future.delayed(const Duration(seconds: 1), () {
+            _updateStationStage('station1', 'vacant');
+          });
+        }
       }
+
       if (decodedEvent['event'] == 'station2') {
-        setState(() {
-          String currentStage = decodedEvent['data']['stage'];
-          _updateStationStage('station2', currentStage);
-          if (currentStage == 'Blending') {
-            int milk = decodedEvent['data']['Milk'];
-            int water = decodedEvent['data']['Water'];
-            int curd = decodedEvent['data']['Curd'];
-            int koolM = decodedEvent['data']['Kool-M'];
-            updateIngredientQuantities(milk, water, curd, koolM);
-          }
-          if (currentStage == 'Clear') {
-            Future.delayed(const Duration(seconds: 1), () {
-              setState(() {
-                _updateStationStage('station2', 'vacant');
-              });
-            });
-          }
-        });
+        String currentStage = decodedEvent['data']['stage'];
+        _updateStationStage('station2', currentStage);
+
+        if (currentStage == 'Blending') {
+          int milk = decodedEvent['data']['Milk'];
+          int water = decodedEvent['data']['Water'];
+          int curd = decodedEvent['data']['Curd'];
+          int koolM = decodedEvent['data']['Kool-M'];
+          updateIngredientQuantities(milk, water, curd, koolM);
+        }
+
+        if (currentStage == 'Clear') {
+          Future.delayed(const Duration(seconds: 1), () {
+            _updateStationStage('station2', 'vacant');
+          });
+        }
+      }
+
+      if (decodedEvent['event'] == 'error_logs') {
+        _showSnackBar2(
+            decodedEvent['data']['message'], Colors.black, Colors.white);
       }
     }, onDone: () {
       setState(() {
@@ -295,11 +295,7 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
                           MachineOperationCard(
                             title: 'Daily Priming',
                             imageUrl: 'assets/blender.png',
-                            // button1Label: 'stop',
                             button2Label: 'Start',
-                            // onButton1Pressed: () {
-                            //   _sendApiRequest('http://192.168.0.65:3001/machineStatus?status=inactive');
-                            // },
                             onButton2Pressed: () {
                               _sendApiRequest(
                                   'http://192.168.0.65:3001/dailyPriming');

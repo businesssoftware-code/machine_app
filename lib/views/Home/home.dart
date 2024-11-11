@@ -1,17 +1,12 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:machine_basil/controller/ValueNotifier.dart';
 import 'package:machine_basil/provider/sharedPrefernce.dart';
 import 'package:machine_basil/utils/drinkHelper.dart';
-import 'package:machine_basil/widgets/curvedLine.dart';
 import 'package:machine_basil/widgets/waveCard.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:http/http.dart' as http;
-import '../../provider/web_socket_channel_html.dart';
 import '../../widgets/CustomAppbar.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -25,6 +20,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late WebSocketChannel _channel;
+  late PreferencesService _preferencesService;
   bool _isConnected = false;
   bool isLoading = false;
   bool _showSuccessScreen = false;
@@ -38,12 +34,11 @@ class _HomeScreenState extends State<HomeScreen> {
     'station2': 'vacant',
   };
 
-  final PreferencesService _preferencesService = PreferencesService();
-
   @override
   void initState() {
     super.initState();
     _connectWebSocket();
+    _preferencesService = PreferencesService();
 
     if (widget.drinkName != null) {
       _drinkName = widget.drinkName;
@@ -54,18 +49,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
       // _sendStartProcessing();
     }
-  }
-
-  Future<void> _loadStationStages() async {
-    stationStages = await _preferencesService.loadStationStages();
-    setState(() {}); // Update UI with loaded values
-  }
-
-  void _updateStationStage(String station, String stage) {
-    setState(() {
-      stationStages[station] = stage;
-    });
-    _preferencesService.saveStationStages(stationStages);
   }
 
   void _connectWebSocket() {
@@ -90,47 +73,38 @@ class _HomeScreenState extends State<HomeScreen> {
           _showSnackBar2(decodedEvent['data']['message']);
         }
         if (decodedEvent['event'] == 'station1') {
-          print(decodedEvent['data']);
+          String currentStage = decodedEvent['data']['stage'];
+          _preferencesService.updateStationStage('station1', currentStage);
 
-          setState(() {
-            String currentStage = decodedEvent['data']['stage'];
-
-            _updateStationStage('station1', currentStage);
-            if (currentStage == 'Blending') {
-              int milk = decodedEvent['data']['Milk'];
-              int water = decodedEvent['data']['Water'];
-              int curd = decodedEvent['data']['Curd'];
-              int koolM = decodedEvent['data']['Kool-M'];
-              updateIngredientQuantities(milk, water, curd, koolM);
-            }
-            if (currentStage == 'Clear') {
-              Future.delayed(const Duration(seconds: 1), () {
-                setState(() {
-                  _updateStationStage('station1', 'vacant');
-                });
-              });
-            }
-          });
+          if (currentStage == 'Blending') {
+            int milk = decodedEvent['data']['Milk'];
+            int water = decodedEvent['data']['Water'];
+            int curd = decodedEvent['data']['Curd'];
+            int koolM = decodedEvent['data']['Kool-M'];
+            updateIngredientQuantities(milk, water, curd, koolM);
+          }
+          if (currentStage == 'Clear') {
+            Future.delayed(const Duration(seconds: 1), () {
+              _preferencesService.updateStationStage('station1', 'vacant');
+            });
+          }
         }
         if (decodedEvent['event'] == 'station2') {
-          setState(() {
-            String currentStage = decodedEvent['data']['stage'];
-            _updateStationStage('station2', currentStage);
-            if (currentStage == 'Blending') {
-              int milk = decodedEvent['data']['Milk'];
-              int water = decodedEvent['data']['Water'];
-              int curd = decodedEvent['data']['Curd'];
-              int koolM = decodedEvent['data']['Kool-M'];
-              updateIngredientQuantities(milk, water, curd, koolM);
-            }
-            if (currentStage == 'Clear') {
-              Future.delayed(const Duration(seconds: 1), () {
-                setState(() {
-                  _updateStationStage('station2', 'vacant');
-                });
-              });
-            }
-          });
+          String currentStage = decodedEvent['data']['stage'];
+          _preferencesService.updateStationStage('station2', currentStage);
+
+          if (currentStage == 'Blending') {
+            int milk = decodedEvent['data']['Milk'];
+            int water = decodedEvent['data']['Water'];
+            int curd = decodedEvent['data']['Curd'];
+            int koolM = decodedEvent['data']['Kool-M'];
+            updateIngredientQuantities(milk, water, curd, koolM);
+          }
+          if (currentStage == 'Clear') {
+            Future.delayed(const Duration(seconds: 1), () {
+              _preferencesService.updateStationStage('station2', 'vacant');
+            });
+          }
         }
       },
       onError: (error) {
@@ -230,7 +204,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   bool get isAnyStationVacant {
-    return stationStages.values.contains('vacant');
+    return _preferencesService.stationStagesNotifier.value.values
+        .contains('vacant');
   }
 
   @override
@@ -346,7 +321,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ],
                                   )
                                 : Column(
-                                    // mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
                                         _drinkName ?? 'Unknown Drink',
@@ -444,13 +418,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                         .displayMedium,
                                   ),
                                   SizedBox(height: screenHeight * 0.01),
-                                  Text(
-                                    stationStages['station$i'] ?? 'vacant',
-                                    textAlign: TextAlign.center,
-                                    style: Theme.of(context)
-                                        .primaryTextTheme
-                                        .displayMedium!
-                                        .copyWith(fontWeight: FontWeight.w200),
+                                  ValueListenableBuilder<Map<String, String>>(
+                                    valueListenable: _preferencesService
+                                        .stationStagesNotifier,
+                                    builder: (context, stationStages, _) {
+                                      return Text(
+                                        stationStages['station$i'] ?? 'vacant',
+                                        textAlign: TextAlign.center,
+                                        style: Theme.of(context)
+                                            .primaryTextTheme
+                                            .displayMedium!
+                                            .copyWith(
+                                                fontWeight: FontWeight.w200),
+                                      );
+                                    },
                                   ),
                                   Image.asset(
                                     'assets/curvedLineBlack.png',

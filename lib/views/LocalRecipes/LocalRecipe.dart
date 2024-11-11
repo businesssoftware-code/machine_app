@@ -1,12 +1,13 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:machine_basil/controller/MenuController.dart';
 import 'package:machine_basil/provider/sharedPrefernce.dart';
 import 'package:machine_basil/utils/drinkHelper.dart';
 import 'package:machine_basil/views/Home/home.dart';
 import 'package:machine_basil/widgets/CustomAppbar.dart';
-import 'package:machine_basil/widgets/locaLRecipeCard.dart';
+import 'package:machine_basil/widgets/localRecipeCard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -20,7 +21,10 @@ class LocalRecipeScreen extends StatefulWidget {
 
 class _LocalRecipeScreenState extends State<LocalRecipeScreen> {
   late WebSocketChannel _channel;
+  late MenuControllers menuController;
+  late PreferencesService _preferencesService;
   bool _isConnected = false;
+
   final List<Map<String, dynamic>> localRecipes = [
     {'name': 'Strawberry Shake', 'url': 'assets/local/strawberry.png'},
     {'name': 'Berrylicious Smoothie', 'url': 'assets/local/Berrilicious.png'},
@@ -38,23 +42,43 @@ class _LocalRecipeScreenState extends State<LocalRecipeScreen> {
     'station2': 'vacant',
   };
 
-  final PreferencesService _preferencesService = PreferencesService();
   @override
   void initState() {
     super.initState();
+    menuController = Get.put(MenuControllers()); // Initialize menuController
+    _preferencesService = PreferencesService();
     _connectWebSocket();
   }
 
-  Future<void> _loadStationStages() async {
-    stationStages = await _preferencesService.loadStationStages();
-    setState(() {});
+  void _showSnackBar2(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Expanded(
+              child: Text(
+                message,
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.close, color: Colors.white),
+              onPressed: () {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              },
+            ),
+          ],
+        ),
+        backgroundColor: Colors.black,
+        duration: const Duration(seconds: 120),
+      ),
+    );
   }
 
+  // Updates station stage and saves it in SharedPreferences
   void _updateStationStage(String station, String stage) {
-    setState(() {
-      stationStages[station] = stage;
-    });
-    _preferencesService.saveStationStages(stationStages);
+    // Update the stationStages map and notify listeners
+    _preferencesService.updateStationStage(station, stage);
   }
 
   void _connectWebSocket() {
@@ -71,61 +95,58 @@ class _LocalRecipeScreenState extends State<LocalRecipeScreen> {
         int curd = decodedEvent['data']['Curd'];
         int koolM = decodedEvent['data']['Kool-M'];
         bool canPrepare = await canPrepareDrink(milk, water, curd, koolM);
-        setState(() {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => HomeScreen(
-                drinkName: decodedEvent['data']['drinkName'],
-                canPrepare: canPrepare,
-              ),
+
+        // Use menuController to update route
+        menuController.updateRoute('/home');
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(
+              drinkName: decodedEvent['data']['drinkName'],
+              canPrepare: canPrepare,
             ),
-          );
-        });
+          ),
+        );
       }
 
+      if (decodedEvent['event'] == 'error_logs') {
+        _showSnackBar2(decodedEvent['data']['message']);
+      }
       if (decodedEvent['event'] == 'station1') {
-        print(decodedEvent['data']);
+        String currentStage = decodedEvent['data']['stage'];
+        _updateStationStage('station1', currentStage);
 
-        setState(() {
-          String currentStage = decodedEvent['data']['stage'];
-
-          _updateStationStage('station1', currentStage);
-          if (currentStage == 'Blending') {
-            int milk = decodedEvent['data']['Milk'];
-            int water = decodedEvent['data']['Water'];
-            int curd = decodedEvent['data']['Curd'];
-            int koolM = decodedEvent['data']['Kool-M'];
-            updateIngredientQuantities(milk, water, curd, koolM);
-          }
-          if (currentStage == 'Clear') {
-            Future.delayed(const Duration(seconds: 1), () {
-              setState(() {
-                _updateStationStage('station1', 'vacant');
-              });
-            });
-          }
-        });
+        if (currentStage == 'Blending') {
+          int milk = decodedEvent['data']['Milk'];
+          int water = decodedEvent['data']['Water'];
+          int curd = decodedEvent['data']['Curd'];
+          int koolM = decodedEvent['data']['Kool-M'];
+          updateIngredientQuantities(milk, water, curd, koolM);
+        }
+        if (currentStage == 'Clear') {
+          Future.delayed(const Duration(seconds: 1), () {
+            _updateStationStage('station1', 'vacant');
+          });
+        }
       }
+
       if (decodedEvent['event'] == 'station2') {
-        setState(() {
-          String currentStage = decodedEvent['data']['stage'];
-          _updateStationStage('station2', currentStage);
-          if (currentStage == 'Blending') {
-            int milk = decodedEvent['data']['Milk'];
-            int water = decodedEvent['data']['Water'];
-            int curd = decodedEvent['data']['Curd'];
-            int koolM = decodedEvent['data']['Kool-M'];
-            updateIngredientQuantities(milk, water, curd, koolM);
-          }
-          if (currentStage == 'Clear') {
-            Future.delayed(const Duration(seconds: 1), () {
-              setState(() {
-                _updateStationStage('station2', 'vacant');
-              });
-            });
-          }
-        });
+        String currentStage = decodedEvent['data']['stage'];
+        _updateStationStage('station2', currentStage);
+
+        if (currentStage == 'Blending') {
+          int milk = decodedEvent['data']['Milk'];
+          int water = decodedEvent['data']['Water'];
+          int curd = decodedEvent['data']['Curd'];
+          int koolM = decodedEvent['data']['Kool-M'];
+          updateIngredientQuantities(milk, water, curd, koolM);
+        }
+        if (currentStage == 'Clear') {
+          Future.delayed(const Duration(seconds: 1), () {
+            _updateStationStage('station2', 'vacant');
+          });
+        }
       }
     }, onDone: () {
       setState(() {
