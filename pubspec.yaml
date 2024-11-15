@@ -67,6 +67,7 @@ flutter:
     - assets/liquids/
     - assets/refil/
     - assets/local/
+    - assets/drinksRes/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

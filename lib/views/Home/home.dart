@@ -32,6 +32,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Map<String, String> stationStages = {
     'station1': 'vacant',
     'station2': 'vacant',
+    'station1DrinkName': 'vacant',
+    'station2DrinkName': 'vacant',
   };
 
   @override
@@ -74,7 +76,10 @@ class _HomeScreenState extends State<HomeScreen> {
         }
         if (decodedEvent['event'] == 'station1') {
           String currentStage = decodedEvent['data']['stage'];
+          String currentDrink = decodedEvent['data']['drinkName'];
           _preferencesService.updateStationStage('station1', currentStage);
+          _preferencesService.updateStationStage(
+              'station1DrinkName', currentDrink);
 
           if (currentStage == 'Blending') {
             int milk = decodedEvent['data']['Milk'];
@@ -84,14 +89,19 @@ class _HomeScreenState extends State<HomeScreen> {
             updateIngredientQuantities(milk, water, curd, koolM);
           }
           if (currentStage == 'Clear') {
-            Future.delayed(const Duration(seconds: 1), () {
+            Future.delayed(const Duration(seconds: 0), () {
               _preferencesService.updateStationStage('station1', 'vacant');
+              _preferencesService.updateStationStage(
+                  'station1DrinkName', 'vacant');
             });
           }
         }
         if (decodedEvent['event'] == 'station2') {
           String currentStage = decodedEvent['data']['stage'];
+          String currentDrink = decodedEvent['data']['drinkName'];
           _preferencesService.updateStationStage('station2', currentStage);
+          _preferencesService.updateStationStage(
+              'station2DrinkName', currentDrink);
 
           if (currentStage == 'Blending') {
             int milk = decodedEvent['data']['Milk'];
@@ -101,8 +111,10 @@ class _HomeScreenState extends State<HomeScreen> {
             updateIngredientQuantities(milk, water, curd, koolM);
           }
           if (currentStage == 'Clear') {
-            Future.delayed(const Duration(seconds: 1), () {
+            Future.delayed(const Duration(seconds: 0), () {
               _preferencesService.updateStationStage('station2', 'vacant');
+              _preferencesService.updateStationStage(
+                  'station2DrinkName', 'vacant');
             });
           }
         }
@@ -269,7 +281,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           )
                         : SizedBox(
-                            height: 300,
+                            height: 410,
+                            width: screenWidth * 0.5,
                             child: _showScanner
                                 ? Stack(
                                     children: [
@@ -296,7 +309,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                               textAlign: TextAlign.center,
                                               style: Theme.of(context)
                                                   .primaryTextTheme
-                                                  .displayLarge,
+                                                  .displayLarge!
+                                                  .copyWith(
+                                                      fontFamily: 'DM Sans'),
                                             ),
                                           ),
                                           Center(
@@ -311,11 +326,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           FontWeight.normal),
                                             ),
                                           ),
-                                          Image.asset(
-                                            'assets/curvedLine.png',
-                                            width: screenWidth * 0.18,
-                                            fit: BoxFit.contain,
+                                          SizedBox(
+                                            height: screenHeight * 0.4,
                                           ),
+                                          // Image.asset(
+                                          //   'assets/curvedLine.png',
+                                          //   width: screenWidth * 0.20,
+                                          //   fit: BoxFit.contain,
+                                          // ),
                                         ],
                                       )
                                     ],
@@ -342,9 +360,37 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 : null,
                                         child: const Text('Start'),
                                       ),
+                                      SizedBox(
+                                          height: screenHeight *
+                                              0.02), // Space between button and images
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal:
+                                                  16.0), // Optional padding for centering
+                                          child: GridView.builder(
+                                            gridDelegate:
+                                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount:
+                                                  3, // 3 images in the first row
+                                              mainAxisSpacing: 8.0,
+                                              crossAxisSpacing: 8.0,
+                                              childAspectRatio:
+                                                  1.0, // Keeps images square
+                                            ),
+                                            itemCount: 5,
+                                            itemBuilder: (context, index) {
+                                              return Image.asset(
+                                                'assets/drinksRes/img${index + 1}.png', // Replace with your image paths
+                                                fit: BoxFit.cover,
+                                              );
+                                            },
+                                            shrinkWrap: true,
+                                          ),
+                                        ),
+                                      ),
                                     ],
-                                  ),
-                          ),
+                                  )),
                   ),
                   Expanded(
                     child: SizedBox(
@@ -355,8 +401,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
-                          crossAxisSpacing: 4.0,
-                          mainAxisSpacing: 4.0,
+                          crossAxisSpacing: 0,
+                          mainAxisSpacing:
+                              32.0, // Increase this value to add more space between rows
                         ),
                         itemBuilder: (BuildContext context, int index) {
                           return WaveCard(
@@ -370,13 +417,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
               ),
-              SizedBox(height: screenHeight * 0.06),
+              // SizedBox(height: screenHeight * 0.03),
               Row(
                 children: [
                   for (var i = 1; i <= 2; i++)
                     Expanded(
                       child: Container(
-                        height: screenHeight * 0.2,
+                        height: screenHeight * 0.3,
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                           color: Color(0xFF0E0E0E),
@@ -392,8 +439,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Padding(
                           padding: EdgeInsets.all(screenHeight * 0.03),
                           child: Container(
-                            width: screenHeight * 0.13,
-                            height: screenHeight * 0.13,
+                            width: screenHeight * 0.14,
+                            height: screenHeight * 0.14,
                             decoration: const BoxDecoration(
                               color: Colors.white,
                               shape: BoxShape.circle,
@@ -422,22 +469,43 @@ class _HomeScreenState extends State<HomeScreen> {
                                     valueListenable: _preferencesService
                                         .stationStagesNotifier,
                                     builder: (context, stationStages, _) {
-                                      return Text(
-                                        stationStages['station$i'] ?? 'vacant',
-                                        textAlign: TextAlign.center,
-                                        style: Theme.of(context)
-                                            .primaryTextTheme
-                                            .displayMedium!
-                                            .copyWith(
-                                                fontWeight: FontWeight.w200),
+                                      bool isVacant =
+                                          stationStages['station$i'] ==
+                                              'vacant';
+                                      return Column(
+                                        children: [
+                                          Text(
+                                            stationStages['station$i'] ??
+                                                'vacant',
+                                            textAlign: TextAlign.center,
+                                            style: Theme.of(context)
+                                                .primaryTextTheme
+                                                .displayMedium!
+                                                .copyWith(
+                                                    fontWeight:
+                                                        FontWeight.w200),
+                                          ),
+                                          if (stationStages['station$i'] !=
+                                              'vacant') ...[
+                                            SizedBox(
+                                                height: screenHeight * 0.01),
+                                            Text(
+                                              '${stationStages['station${i}DrinkName'] ?? ''}',
+                                              textAlign: TextAlign.center,
+                                              style: Theme.of(context)
+                                                  .primaryTextTheme
+                                                  .bodyMedium,
+                                            ),
+                                          ],
+                                        ],
                                       );
                                     },
                                   ),
-                                  Image.asset(
-                                    'assets/curvedLineBlack.png',
-                                    width: screenWidth * 0.1,
-                                    fit: BoxFit.contain,
-                                  ),
+                                  // Image.asset(
+                                  //   'assets/curvedLineBlack.png',
+                                  //   width: screenWidth * 0.1,
+                                  //   fit: BoxFit.contain,
+                                  // ),
                                 ],
                               ),
                             ),

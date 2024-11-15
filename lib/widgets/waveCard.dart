@@ -28,12 +28,13 @@ class WaveCard extends StatelessWidget {
               Text(
                 '$quantity ml',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: quantity < 401 ? Colors.red : Colors.white,
                 ),
               ),
-              Expanded(
+              SizedBox(
+                height: 100, // Set the desired height for the image here
                 child: Image.asset(
                   url,
                   fit: BoxFit.contain,

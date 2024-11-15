@@ -21,14 +21,14 @@ class ThemeClass {
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
           backgroundColor: Color(0xfffffffff)),
       cupertinoOverrideTheme:
-      const CupertinoThemeData(brightness: Brightness.dark),
+          const CupertinoThemeData(brightness: Brightness.dark),
       primaryTextTheme:
-      GoogleFonts.pattayaTextTheme(Theme.of(context).textTheme).copyWith(
+          GoogleFonts.pattayaTextTheme(Theme.of(context).textTheme).copyWith(
         displayLarge: GoogleFonts.pattaya(
             color: Colors.white,
             fontWeight: FontWeight.w400,
             fontStyle: FontStyle.normal,
-            fontSize: 24),
+            fontSize: 28),
         displayMedium: GoogleFonts.pattaya(
             color: const Color(0xff05070B),
             fontWeight: FontWeight.w400,
@@ -76,8 +76,8 @@ class ThemeClass {
             fontStyle: FontStyle.normal,
             letterSpacing: -0.32),
         bodyMedium: GoogleFonts.nunitoSans(
-            color: const Color(0xffFFFFFF),
-            fontWeight: FontWeight.normal,
+            color: const Color.fromARGB(255, 0, 0, 0),
+            fontWeight: FontWeight.bold,
             fontStyle: FontStyle.normal,
             letterSpacing: -0.32),
         bodySmall: GoogleFonts.nunitoSans(

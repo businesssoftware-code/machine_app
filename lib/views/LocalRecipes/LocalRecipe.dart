@@ -40,6 +40,8 @@ class _LocalRecipeScreenState extends State<LocalRecipeScreen> {
   Map<String, String> stationStages = {
     'station1': 'vacant',
     'station2': 'vacant',
+    'station1DrinkName': 'vacant',
+    'station2DrinkName': 'vacant',
   };
 
   @override
@@ -115,7 +117,9 @@ class _LocalRecipeScreenState extends State<LocalRecipeScreen> {
       }
       if (decodedEvent['event'] == 'station1') {
         String currentStage = decodedEvent['data']['stage'];
+        String currentDrink = decodedEvent['data']['drinkName'];
         _updateStationStage('station1', currentStage);
+        _updateStationStage('station1DrinkName', currentDrink);
 
         if (currentStage == 'Blending') {
           int milk = decodedEvent['data']['Milk'];
@@ -125,15 +129,18 @@ class _LocalRecipeScreenState extends State<LocalRecipeScreen> {
           updateIngredientQuantities(milk, water, curd, koolM);
         }
         if (currentStage == 'Clear') {
-          Future.delayed(const Duration(seconds: 1), () {
+          Future.delayed(const Duration(seconds: 0), () {
             _updateStationStage('station1', 'vacant');
+            _updateStationStage('station1DrinkName', 'vacant');
           });
         }
       }
 
       if (decodedEvent['event'] == 'station2') {
         String currentStage = decodedEvent['data']['stage'];
+        String currentDrink = decodedEvent['data']['drinkName'];
         _updateStationStage('station2', currentStage);
+        _updateStationStage('station2DrinkName', currentDrink);
 
         if (currentStage == 'Blending') {
           int milk = decodedEvent['data']['Milk'];
@@ -143,8 +150,9 @@ class _LocalRecipeScreenState extends State<LocalRecipeScreen> {
           updateIngredientQuantities(milk, water, curd, koolM);
         }
         if (currentStage == 'Clear') {
-          Future.delayed(const Duration(seconds: 1), () {
+          Future.delayed(const Duration(seconds: 0), () {
             _updateStationStage('station2', 'vacant');
+            _updateStationStage('station2DrinkName', 'vacant');
           });
         }
       }

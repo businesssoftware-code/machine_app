@@ -80,7 +80,9 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
 
       if (decodedEvent['event'] == 'station1') {
         String currentStage = decodedEvent['data']['stage'];
+        String currentDrink = decodedEvent['data']['drinkName'];
         _updateStationStage('station1', currentStage);
+        _updateStationStage('station1DrinkName', currentDrink);
 
         if (currentStage == 'Blending') {
           int milk = decodedEvent['data']['Milk'];
@@ -91,15 +93,18 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
         }
 
         if (currentStage == 'Clear') {
-          Future.delayed(const Duration(seconds: 1), () {
+          Future.delayed(const Duration(seconds: 0), () {
             _updateStationStage('station1', 'vacant');
+            _updateStationStage('station1DrinkName', 'vacant');
           });
         }
       }
 
       if (decodedEvent['event'] == 'station2') {
         String currentStage = decodedEvent['data']['stage'];
+        String currentDrink = decodedEvent['data']['drinkName'];
         _updateStationStage('station2', currentStage);
+        _updateStationStage('station2DrinkName', currentDrink);
 
         if (currentStage == 'Blending') {
           int milk = decodedEvent['data']['Milk'];
@@ -110,8 +115,9 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
         }
 
         if (currentStage == 'Clear') {
-          Future.delayed(const Duration(seconds: 1), () {
+          Future.delayed(const Duration(seconds: 0), () {
             _updateStationStage('station2', 'vacant');
+            _updateStationStage('station2DrinkName', 'vacant');
           });
         }
       }
