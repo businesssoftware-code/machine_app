@@ -394,7 +394,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           crossAxisSpacing: 0.0,
-                          mainAxisSpacing: 80.0,
+                          mainAxisSpacing: 100.0,
 
                         ),
                         itemBuilder: (BuildContext context, int index) {
@@ -409,7 +409,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
               ),
-              // SizedBox(height: screenHeight * 0.03),
+              SizedBox(height: screenHeight * 0.03),
               Row(
                 children: [
                   for (var i = 1; i <= 2; i++)
@@ -431,8 +431,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Padding(
                           padding: EdgeInsets.all(screenHeight * 0.03),
                           child: Container(
-                            width: screenHeight * 0.2,
-                            height: screenHeight * 0.2,
+                            width: screenHeight * 0.8,
+                            height: screenHeight * 0.8,
                             decoration: const BoxDecoration(
                               color: Colors.white,
                               shape: BoxShape.circle,
