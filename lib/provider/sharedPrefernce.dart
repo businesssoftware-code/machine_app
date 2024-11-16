@@ -10,6 +10,8 @@ class PreferencesService {
       ValueNotifier<Map<String, String>>({
     'station1': 'vacant',
     'station2': 'vacant',
+    'station1DrinkName': 'vacant',
+    'station2DrinkName': 'vacant',
   });
 
   PreferencesService() {
