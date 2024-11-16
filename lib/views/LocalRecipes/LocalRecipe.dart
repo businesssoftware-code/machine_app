@@ -28,7 +28,7 @@ class _LocalRecipeScreenState extends State<LocalRecipeScreen> {
   final List<Map<String, dynamic>> localRecipes = [
     {'name': 'Strawberry Shake', 'url': 'assets/local/strawberry.png'},
     {'name': 'Berrylicious Smoothie', 'url': 'assets/local/Berrilicious.png'},
-    {'name': 'Guiltree Avocado Smoothie', 'url': 'assets/local/Avacado.png'},
+    {'name': 'Guiltfree Avocado Smoothie', 'url': 'assets/local/Avacado.png'},
     {'name': 'Berry Ice Tea', 'url': 'assets/local/BerryIce.png'},
     {'name': 'Choco Brownie Shake', 'url': 'assets/local/Choco.png'},
     {'name': 'Classic Cold Coffee', 'url': 'assets/local/ClassicCold.png'},

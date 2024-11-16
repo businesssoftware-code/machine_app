@@ -283,7 +283,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         : SizedBox(
                             height: 410,
                             width: screenWidth * 0.5,
-                            child: _showScanner
+                            child: !_showScanner
                                 ? Stack(
                                     children: [
                                       Positioned(
@@ -374,10 +374,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                             itemCount: 5,
                                             itemBuilder: (context, index) {
-                                              return Image.asset(
+                                              if(_drinkName=="Pineapple Cooler" || _drinkName=="Berry Ice Tea"){
+                                                return Image.asset(
                                                 'assets/drinksRes/img${index + 1}.png', // Replace with your image paths
                                                 fit: BoxFit.cover,
-                                              );
+                                                );
+                                              }else if(index!=2){
+
+                                                 return Image.asset(
+                                                'assets/drinksRes/img${index + 1}.png', // Replace with your image paths
+                                                fit: BoxFit.cover,
+                                                );
+
+                                              }
+                                              
                                             },
                                             shrinkWrap: true,
                                           ),
