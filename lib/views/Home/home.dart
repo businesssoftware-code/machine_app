@@ -259,7 +259,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Column(
             children: <Widget>[
-              SizedBox(height: screenHeight * 0.06),
+              // SizedBox(height: screenHeight * 0.06),
               CustomAppBar(
                 onReconnect: _reconnect,
                 isConnected: _isConnected,
@@ -431,8 +431,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Padding(
                           padding: EdgeInsets.all(screenHeight * 0.03),
                           child: Container(
-                            width: screenHeight,
-                            height: screenHeight,
+                            width: screenHeight * 0.2,
+                            height: screenHeight * 0.2,
                             decoration: const BoxDecoration(
                               color: Colors.white,
                               shape: BoxShape.circle,
@@ -475,7 +475,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 .displayMedium!
                                                 .copyWith(
                                                     fontWeight:
-                                                        FontWeight.w200),
+                                                        FontWeight.bold),
                                           ),
                                           if (stationStages['station$i'] !=
                                               'vacant') ...[
