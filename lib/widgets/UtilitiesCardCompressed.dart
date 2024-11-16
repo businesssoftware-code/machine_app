@@ -75,7 +75,7 @@ class UtilitiesCardSmall extends StatelessWidget {
               ),
             ),
             child: Text(
-              'start',
+              'Start',
               style: Theme.of(context).primaryTextTheme.headlineSmall!.copyWith(
                 color: const Color(0xFF0E0E0E),
                 fontWeight: FontWeight.w400,

@@ -259,7 +259,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Column(
             children: <Widget>[
-              SizedBox(height: screenHeight * 0.06),
+              // SizedBox(height: screenHeight * 0.06),
               CustomAppBar(
                 onReconnect: _reconnect,
                 isConnected: _isConnected,
@@ -296,7 +296,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             image: DecorationImage(
                                               image: AssetImage(
                                                   'assets/scanImage.png'),
-                                              fit: BoxFit.fill,
+                                              fit: BoxFit.contain,
                                             ),
                                           ),
                                         ),
@@ -323,17 +323,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   .displayLarge!
                                                   .copyWith(
                                                       fontWeight:
-                                                          FontWeight.normal),
+                                                          FontWeight.bold),
                                             ),
-                                          ),
-                                          SizedBox(
-                                            height: screenHeight * 0.4,
-                                          ),
-                                          // Image.asset(
-                                          //   'assets/curvedLine.png',
-                                          //   width: screenWidth * 0.20,
-                                          //   fit: BoxFit.contain,
-                                          // ),
+                                          )
                                         ],
                                       )
                                     ],
@@ -401,9 +393,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
-                          crossAxisSpacing: 0,
-                          mainAxisSpacing:
-                              32.0, // Increase this value to add more space between rows
+                          crossAxisSpacing: 0.0,
+                          mainAxisSpacing: 80.0,
+
                         ),
                         itemBuilder: (BuildContext context, int index) {
                           return WaveCard(
@@ -411,7 +403,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             url: waveCardData[index]['url'],
                           );
                         },
-                        itemCount: 4,
+                        itemCount: waveCardData.length,
                       ),
                     ),
                   ),
@@ -439,8 +431,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Padding(
                           padding: EdgeInsets.all(screenHeight * 0.03),
                           child: Container(
-                            width: screenHeight * 0.14,
-                            height: screenHeight * 0.14,
+                            width: screenHeight * 0.2,
+                            height: screenHeight * 0.2,
                             decoration: const BoxDecoration(
                               color: Colors.white,
                               shape: BoxShape.circle,
@@ -483,7 +475,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 .displayMedium!
                                                 .copyWith(
                                                     fontWeight:
-                                                        FontWeight.w200),
+                                                        FontWeight.bold),
                                           ),
                                           if (stationStages['station$i'] !=
                                               'vacant') ...[

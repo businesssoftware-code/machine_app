@@ -138,8 +138,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
                 title,
                 style: TextStyle(
                   color: isSelected ? Colors.white : Colors.black,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
                   decoration: TextDecoration.none,
                 ),
               ),

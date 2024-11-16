@@ -23,10 +23,13 @@ class PrimingCard extends StatelessWidget {
 
     return Container(
       child: Column(
+        
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           // Image with rounded corners
+          
           Container(
+            // padding: const EdgeInsets.symmetric(horizontal: 8.0),
             decoration: BoxDecoration(
               color: const Color(0xFF2B2B2B),
               border: Border.all(color: const Color(0xFFE9E9E9), width: 0.20),
@@ -43,8 +46,8 @@ class PrimingCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
               child: Image.asset(
                 imageUrl,
-                height: screenHeight * 0.2,
-                width: screenWidth * 0.8,
+                height: screenHeight * 0.12,
+                width: screenWidth * 0.9,
                 fit: BoxFit.cover,
               ),
             ),
@@ -59,12 +62,6 @@ class PrimingCard extends StatelessWidget {
               color: Colors.white,
             ),
             textAlign: TextAlign.center,
-          ),
-
-          Image.asset(
-            'assets/curvedLine.png',
-            width: screenWidth * 0.14,
-            fit: BoxFit.contain,
           ),
           SizedBox(height: screenHeight * 0.02),
           Padding(
@@ -84,20 +81,20 @@ class PrimingCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _buildButton('start', onStartPressed[0]),
-                    _buildButton('start', onStartPressed[1]),
-                    _buildButton('start', onStartPressed[2]),
-                    _buildButton('start', onStartPressed[3]),
+                    _buildButton('Start', onStartPressed[0]),
+                    _buildButton('Start', onStartPressed[1]),
+                    _buildButton('Start', onStartPressed[2]),
+                    _buildButton('Start', onStartPressed[3]),
                   ],
                 ),
                 SizedBox(height: screenHeight * 0.01),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _buildButton('stop', onStopPressed[0]),
-                    _buildButton('stop', onStopPressed[1]),
-                    _buildButton('stop', onStopPressed[2]),
-                    _buildButton('stop', onStopPressed[3]),
+                    _buildButton('Stop', onStopPressed[0]),
+                    _buildButton('Stop', onStopPressed[1]),
+                    _buildButton('Stop', onStopPressed[2]),
+                    _buildButton('Stop', onStopPressed[3]),
                   ],
                 ),
               ],

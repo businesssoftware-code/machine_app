@@ -57,7 +57,6 @@ class _RefillCardState extends State<RefillCard> {
 
     return Container(
       padding: EdgeInsets.all(screenWidth * 0.02),
-
       child: Row(
         children: [
           // Left side image container
@@ -66,10 +65,10 @@ class _RefillCardState extends State<RefillCard> {
             width: screenWidth * 0.12,
             decoration: BoxDecoration(
               color: Colors.transparent,
-              borderRadius: BorderRadius.circular(60),
+              // borderRadius: BorderRadius.circular(60),
               image: DecorationImage(
                 image: AssetImage(widget.url),
-                fit: BoxFit.cover,
+                fit: BoxFit.contain,
               ),
             ),
           ),
@@ -83,11 +82,12 @@ class _RefillCardState extends State<RefillCard> {
                 // Drink name
                 Text(
                   widget.name,
-                  style: Theme.of(context).primaryTextTheme.displaySmall?.copyWith(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+                  style:
+                      Theme.of(context).primaryTextTheme.displaySmall?.copyWith(
+                            fontSize: 18,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.white,
+                          ),
                 ),
                 const SizedBox(height: 8),
                 // Display current quantity
@@ -95,18 +95,28 @@ class _RefillCardState extends State<RefillCard> {
                   '$quantity ml',
                   style: const TextStyle(
                     fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.normal,
                     color: Colors.white,
                   ),
                 ),
                 const SizedBox(height: 8),
                 // Label with red asterisk
-                const Text(
-                  'Refill Volume *',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                RichText(
+                  text: const TextSpan(
+                    text: 'Refill Volume ',
+                    style:  TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: '*',
+                        style: TextStyle(
+                          color: Colors.red, // Style the asterisk (*) in red
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -115,12 +125,15 @@ class _RefillCardState extends State<RefillCard> {
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   decoration: BoxDecoration(
                     color: const Color(0xFF2B2B2B),
-                    border: Border.all(color: const Color(0xFFE9E9E9), width: 0.20),
+                    border:
+                        Border.all(color: const Color(0xFFE9E9E9), width: 0.20),
                     boxShadow: const [
                       BoxShadow(
-                        color: Color(0x66BCBCBC), // Lower opacity for a lighter shadow
+                        color: Color(
+                            0x66BCBCBC), // Lower opacity for a lighter shadow
                         offset: Offset(0, 5), // Reduced offset for less spread
-                        blurRadius: 15, // Reduced blur radius for a tighter shadow
+                        blurRadius:
+                            15, // Reduced blur radius for a tighter shadow
                       ),
                     ],
                     borderRadius: BorderRadius.circular(16),
@@ -143,8 +156,8 @@ class _RefillCardState extends State<RefillCard> {
                     final enteredQuantity = int.tryParse(_controller.text) ?? 0;
                     if (enteredQuantity > 0) {
                       _saveQuantity(enteredQuantity);
-                      _controller.clear();  // Clear the text field
-                      FocusScope.of(context).unfocus();  // Dismiss the keyboard
+                      _controller.clear(); // Clear the text field
+                      FocusScope.of(context).unfocus(); // Dismiss the keyboard
                     }
                   },
                   style: ElevatedButton.styleFrom(
