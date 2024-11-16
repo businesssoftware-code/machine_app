@@ -32,9 +32,11 @@ class WaveCard extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   color: quantity < 401 ? Colors.red : Colors.white,
                 ),
-              ),
-              Expanded(
-                child: Image.asset(
+              ),     
+              SizedBox(
+                  width: 160,
+                  height: 160,
+                  child: Image.asset(
                   url,
                   fit: BoxFit.contain,
                 ),

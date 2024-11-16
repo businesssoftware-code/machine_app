@@ -79,7 +79,7 @@ class _LocalRecipeCardState extends State<LocalRecipeCard> {
           Container(
             decoration: BoxDecoration(
               color: const Color(0xFF2B2B2B),
-              border: Border.all(color: const Color(0xFFE9E9E9), width: 0.20),
+              // border: Border.all(color: const Color(0xFFE9E9E9), width: 0.20),
               boxShadow: const [
                 BoxShadow(
                   color: Color(0x66BCBCBC),
@@ -87,14 +87,19 @@ class _LocalRecipeCardState extends State<LocalRecipeCard> {
                   blurRadius: 15,
                 ),
               ],
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(32),
             ),
-            child: Image.asset(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(32.0),
+              child: Image.asset(
               widget.imageUrl,
               height: screenHeight * 0.16,
               width: screenWidth * 0.4,
               fit: BoxFit.cover,
             ),
+
+            ),
+            
           ),
           SizedBox(height: screenHeight * 0.01),
           // Recipe name
@@ -131,7 +136,7 @@ class _LocalRecipeCardState extends State<LocalRecipeCard> {
                     ),
                   )
                 : Text(
-                    'make',
+                    'Make',
                     style: Theme.of(context)
                         .primaryTextTheme
                         .headlineSmall!

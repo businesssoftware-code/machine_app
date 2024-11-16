@@ -177,7 +177,7 @@ class _RefillingLiquidState extends State<RefillingLiquid> {
                     text: 'Refilling ',
                     style: GoogleFonts.dmSans(
                         fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.normal,
                         color: Colors.white),
                   ),
                   TextSpan(
@@ -185,30 +185,25 @@ class _RefillingLiquidState extends State<RefillingLiquid> {
                     style: Theme.of(context)
                         .primaryTextTheme
                         .displayLarge!
-                        .copyWith(fontSize: 20),
+                        .copyWith(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   TextSpan(
                     text: ' Container',
                     style: GoogleFonts.dmSans(
                         fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.normal,
                         color: Colors.white),
                   ),
                 ],
               ),
             ),
           ),
-          Image.asset(
-            'assets/curvedLine.png',
-            width: screenWidth * 0.14,
-            fit: BoxFit.contain,
-          ),
           Expanded(
             child: GridView.builder(
               shrinkWrap: true,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                crossAxisSpacing: 4.0,
+                crossAxisSpacing: 0.0,
                 mainAxisSpacing: 4.0,
                 childAspectRatio: 0.75,
               ),

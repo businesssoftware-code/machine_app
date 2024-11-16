@@ -24,17 +24,17 @@ class ThemeClass {
       const CupertinoThemeData(brightness: Brightness.dark),
       primaryTextTheme:
       GoogleFonts.pattayaTextTheme(Theme.of(context).textTheme).copyWith(
-        displayLarge: GoogleFonts.pattaya(
+        displayLarge: GoogleFonts.dmSans(
             color: Colors.white,
             fontWeight: FontWeight.w400,
             fontStyle: FontStyle.normal,
             fontSize: 24),
-        displayMedium: GoogleFonts.pattaya(
+        displayMedium: GoogleFonts.dmSans(
             color: const Color(0xff05070B),
             fontWeight: FontWeight.w400,
             fontStyle: FontStyle.normal,
             fontSize: 18),
-        displaySmall: GoogleFonts.pattaya(
+        displaySmall: GoogleFonts.dmSans(
             color: Colors.white,
             fontWeight: FontWeight.bold,
             fontSize: 24,
@@ -49,9 +49,9 @@ class ThemeClass {
             fontWeight: FontWeight.bold,
             fontStyle: FontStyle.normal,
             fontSize: 18),
-        headlineSmall: GoogleFonts.pattaya(
+        headlineSmall: GoogleFonts.dmSans(
             color: Colors.white,
-            fontWeight: FontWeight.normal,
+            fontWeight: FontWeight.w600,
             fontStyle: FontStyle.normal,
             fontSize: 14),
         titleLarge: GoogleFonts.pattaya(

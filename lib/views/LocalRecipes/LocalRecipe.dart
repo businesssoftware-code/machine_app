@@ -203,11 +203,6 @@ class _LocalRecipeScreenState extends State<LocalRecipeScreen> {
                 ),
               ),
               const SizedBox(height: 8),
-              Image.asset(
-                'assets/curvedLine.png',
-                width: screenWidth * 0.10,
-                fit: BoxFit.contain,
-              ),
             ],
           ),
           SizedBox(height: screenHeight * 0.01),

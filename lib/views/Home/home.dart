@@ -269,7 +269,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           )
                         : SizedBox(
-                            height: 300,
+                            height: 400,
                             child: _showScanner
                                 ? Stack(
                                     children: [
@@ -283,7 +283,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             image: DecorationImage(
                                               image: AssetImage(
                                                   'assets/scanImage.png'),
-                                              fit: BoxFit.fill,
+                                              fit: BoxFit.contain,
                                             ),
                                           ),
                                         ),
@@ -308,14 +308,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   .displayLarge!
                                                   .copyWith(
                                                       fontWeight:
-                                                          FontWeight.normal),
+                                                          FontWeight.bold),
                                             ),
-                                          ),
-                                          Image.asset(
-                                            'assets/curvedLine.png',
-                                            width: screenWidth * 0.18,
-                                            fit: BoxFit.contain,
-                                          ),
+                                          )
                                         ],
                                       )
                                     ],
@@ -355,8 +350,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
-                          crossAxisSpacing: 4.0,
-                          mainAxisSpacing: 4.0,
+                          crossAxisSpacing: 0.0,
+                          mainAxisSpacing: 80.0,
+
                         ),
                         itemBuilder: (BuildContext context, int index) {
                           return WaveCard(
@@ -364,7 +360,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             url: waveCardData[index]['url'],
                           );
                         },
-                        itemCount: 4,
+                        itemCount: waveCardData.length,
                       ),
                     ),
                   ),
@@ -392,8 +388,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Padding(
                           padding: EdgeInsets.all(screenHeight * 0.03),
                           child: Container(
-                            width: screenHeight * 0.13,
-                            height: screenHeight * 0.13,
+                            width: screenHeight,
+                            height: screenHeight,
                             decoration: const BoxDecoration(
                               color: Colors.white,
                               shape: BoxShape.circle,
@@ -429,15 +425,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                             .primaryTextTheme
                                             .displayMedium!
                                             .copyWith(
-                                                fontWeight: FontWeight.w200),
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold),
                                       );
                                     },
                                   ),
-                                  Image.asset(
-                                    'assets/curvedLineBlack.png',
-                                    width: screenWidth * 0.1,
-                                    fit: BoxFit.contain,
-                                  ),
+                      
                                 ],
                               ),
                             ),

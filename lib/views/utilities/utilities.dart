@@ -230,12 +230,6 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  Image.asset(
-                    'assets/curvedLine.png',
-                    width: screenWidth * 0.10,
-                    fit: BoxFit.contain,
-                    color: Colors.white, // Set image color to white for theme
-                  ),
                 ],
               ),
               SizedBox(height: screenHeight * 0.01),
@@ -256,7 +250,7 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
                           ),
                           UtilitiesCardSmall(
                             title: 'Homing',
-                            imageUrl: 'assets/blender.png',
+                            imageUrl: 'assets/homing.png',
                             onStartPressed: () {
                               _sendApiRequest(
                                   'http://192.168.0.65:3001/homing');
@@ -264,10 +258,40 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
                           ),
                         ],
                       ),
+                      
+                      SizedBox(height: screenHeight * 0.01),
+                      Row(
+                        children: [
+                          MachineOperationCard(
+                            title: 'Daily Priming',
+                            imageUrl: 'assets/machine.png',
+                            button2Label: 'Start',
+                            onButton2Pressed: () {
+                              _sendApiRequest(
+                                  'http://192.168.0.65:3001/dailyPriming');
+                            },
+                          ),
+                          MachineOperationCard(
+                            title: 'Machine',
+                            imageUrl: 'assets/machine.png',
+                            button1Label: 'Active',
+                            button2Label: 'Inactive',
+                            onButton1Pressed: () {
+                              _sendApiRequest(
+                                  'http://192.168.0.65:3001/machineStatus?status=active');
+                            },
+                            onButton2Pressed: () {
+                              _sendApiRequest(
+                                  'http://192.168.0.65:3001/machineStatus?status=inactive');
+                            },
+                          ),
+                        ],
+                      ),
+
                       SizedBox(height: screenHeight * 0.01),
                       PrimingCard(
                         title: 'Priming',
-                        imageUrl: 'assets/blender.png',
+                        imageUrl: 'assets/priming.png',
                         onStartPressed: [
                           () => _sendApiRequest(
                               'http://192.168.0.65:3001/liquids?liqNum=1&liqAction=start'),
@@ -289,34 +313,7 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
                               'http://192.168.0.65:3001/liquids?liqNum=4&liqAction=stop'),
                         ],
                       ),
-                      SizedBox(height: screenHeight * 0.01),
-                      Row(
-                        children: [
-                          MachineOperationCard(
-                            title: 'Daily Priming',
-                            imageUrl: 'assets/blender.png',
-                            button2Label: 'Start',
-                            onButton2Pressed: () {
-                              _sendApiRequest(
-                                  'http://192.168.0.65:3001/dailyPriming');
-                            },
-                          ),
-                          MachineOperationCard(
-                            title: 'Machine',
-                            imageUrl: 'assets/blender.png',
-                            button1Label: 'active',
-                            button2Label: 'inactive',
-                            onButton1Pressed: () {
-                              _sendApiRequest(
-                                  'http://192.168.0.65:3001/machineStatus?status=active');
-                            },
-                            onButton2Pressed: () {
-                              _sendApiRequest(
-                                  'http://192.168.0.65:3001/machineStatus?status=inactive');
-                            },
-                          ),
-                        ],
-                      ),
+
                     ],
                   ),
                 ),
