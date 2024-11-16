@@ -259,14 +259,14 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Column(
             children: <Widget>[
-              // SizedBox(height: screenHeight * 0.06),
+              SizedBox(height: screenHeight * 0.06),
               CustomAppBar(
                 onReconnect: _reconnect,
                 isConnected: _isConnected,
                 screenHeight: screenHeight,
                 screenWidth: screenWidth,
               ),
-              SizedBox(height: screenHeight * 0.06),
+              SizedBox(height: screenHeight * 0.04),
               Row(
                 children: [
                   Expanded(
@@ -311,6 +311,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   .primaryTextTheme
                                                   .displayLarge!
                                                   .copyWith(
+                                                      fontSize: 30,
                                                       fontFamily: 'DM Sans'),
                                             ),
                                           ),
@@ -322,6 +323,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   .primaryTextTheme
                                                   .displayLarge!
                                                   .copyWith(
+                                                    fontSize: 30,
                                                       fontWeight:
                                                           FontWeight.bold),
                                             ),
@@ -394,7 +396,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           crossAxisSpacing: 0.0,
-                          mainAxisSpacing: 100.0,
+                          mainAxisSpacing: 50.0,
 
                         ),
                         itemBuilder: (BuildContext context, int index) {
@@ -409,7 +411,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
               ),
-              SizedBox(height: screenHeight * 0.03),
+              // SizedBox(height: screenHeight * 0.03),
               Row(
                 children: [
                   for (var i = 1; i <= 2; i++)
