@@ -283,7 +283,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         : SizedBox(
                             height: 410,
                             width: screenWidth * 0.5,
-                            child: !_showScanner
+                            child: _showScanner
                                 ? Stack(
                                     children: [
                                       Positioned(
