@@ -48,6 +48,9 @@ class _HomeScreenState extends State<HomeScreen> {
       if (widget.canPrepare != null) {
         canPrepare = widget.canPrepare!;
       }
+      if (widget.canPrepare == null) {
+        _showSnackBar2("Insufficient ingredients to prepare the drink.");
+      }
 
       // _sendStartProcessing();
     }
@@ -70,6 +73,9 @@ class _HomeScreenState extends State<HomeScreen> {
           int curd = decodedEvent['data']['Curd'];
           int koolM = decodedEvent['data']['Kool-M'];
           canPrepare = await canPrepareDrink(milk, water, curd, koolM);
+          if (!canPrepare) {
+            _showSnackBar2("Insufficient ingredients to prepare the drink.");
+          }
         }
         if (decodedEvent['event'] == 'error_logs') {
           _showSnackBar2(decodedEvent['data']['message']);
@@ -323,7 +329,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   .primaryTextTheme
                                                   .displayLarge!
                                                   .copyWith(
-                                                    fontSize: 30,
+                                                      fontSize: 30,
                                                       fontWeight:
                                                           FontWeight.bold),
                                             ),
@@ -374,20 +380,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                             itemCount: 5,
                                             itemBuilder: (context, index) {
-                                              if(_drinkName=="Pineapple Cooler" || _drinkName=="Berry Ice Tea"){
+                                              if (_drinkName ==
+                                                      "Pineapple Cooler" ||
+                                                  _drinkName ==
+                                                      "Berry Ice Tea") {
                                                 return Image.asset(
-                                                'assets/drinksRes/img${index + 1}.png', // Replace with your image paths
-                                                fit: BoxFit.cover,
+                                                  'assets/drinksRes/img${index + 1}.png', // Replace with your image paths
+                                                  fit: BoxFit.cover,
                                                 );
-                                              }else if(index!=2){
-
-                                                 return Image.asset(
-                                                'assets/drinksRes/img${index + 1}.png', // Replace with your image paths
-                                                fit: BoxFit.cover,
+                                              } else if (index != 2) {
+                                                return Image.asset(
+                                                  'assets/drinksRes/img${index + 1}.png', // Replace with your image paths
+                                                  fit: BoxFit.cover,
                                                 );
-
                                               }
-                                              
                                             },
                                             shrinkWrap: true,
                                           ),
@@ -407,7 +413,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           crossAxisCount: 2,
                           crossAxisSpacing: 0.0,
                           mainAxisSpacing: 50.0,
-
                         ),
                         itemBuilder: (BuildContext context, int index) {
                           return WaveCard(

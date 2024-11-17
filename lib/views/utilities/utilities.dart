@@ -145,7 +145,7 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
-        _showSnackBar('Request successful!', Colors.black, Colors.white);
+        // _showSnackBar('Request successful!', Colors.black, Colors.white);
       } else {
         _showSnackBar('Request failed with status: ${response.statusCode}',
             Colors.black, Colors.white);
@@ -264,7 +264,6 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
                           ),
                         ],
                       ),
-                      
                       SizedBox(height: screenHeight * 0.01),
                       Row(
                         children: [
@@ -293,7 +292,6 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
                           ),
                         ],
                       ),
-
                       SizedBox(height: screenHeight * 0.01),
                       PrimingCard(
                         title: 'Priming',
@@ -319,7 +317,6 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
                               'http://192.168.0.65:3001/liquids?liqNum=4&liqAction=stop'),
                         ],
                       ),
-
                     ],
                   ),
                 ),

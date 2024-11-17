@@ -235,7 +235,9 @@ class _CustomAppBarState extends State<CustomAppBar> {
                             height: 10,
                             width: 10,
                             decoration: BoxDecoration(
-                              color: Colors.green,
+                              color: widget.isConnected
+                                  ? Colors.green
+                                  : Colors.red,
                               shape: BoxShape.circle,
                             ),
                           ),

@@ -97,6 +97,9 @@ class _LocalRecipeScreenState extends State<LocalRecipeScreen> {
         int curd = decodedEvent['data']['Curd'];
         int koolM = decodedEvent['data']['Kool-M'];
         bool canPrepare = await canPrepareDrink(milk, water, curd, koolM);
+        // if (!canPrepare) {
+        //   _showSnackBar2("Insufficient ingredients to prepare the drink.");
+        // }
 
         // Use menuController to update route
         menuController.updateRoute('/home');
