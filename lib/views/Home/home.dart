@@ -362,40 +362,86 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                       SizedBox(
                                           height: screenHeight *
-                                              0.02), // Space between button and images
+                                              0.01), // Space between button and images
                                       Expanded(
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(
-                                              horizontal:
-                                                  16.0), // Optional padding for centering
-                                          child: GridView.builder(
-                                            gridDelegate:
-                                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                              crossAxisCount:
-                                                  3, // 3 images in the first row
-                                              mainAxisSpacing: 8.0,
-                                              crossAxisSpacing: 8.0,
-                                              childAspectRatio:
-                                                  1.0, // Keeps images square
+                                              horizontal: 16.0),
+                                          child: Container(
+                                            decoration: const BoxDecoration(
+                                              image: DecorationImage(
+                                                image: AssetImage(
+                                                    'assets/shadow.png'),
+                                                fit: BoxFit.contain,
+                                              ),
                                             ),
-                                            itemCount: 5,
-                                            itemBuilder: (context, index) {
-                                              if (_drinkName ==
-                                                      "Pineapple Cooler" ||
-                                                  _drinkName ==
-                                                      "Berry Ice Tea") {
-                                                return Image.asset(
-                                                  'assets/drinksRes/img${index + 1}.png', // Replace with your image paths
-                                                  fit: BoxFit.cover,
-                                                );
-                                              } else if (index != 2) {
-                                                return Image.asset(
-                                                  'assets/drinksRes/img${index + 1}.png', // Replace with your image paths
-                                                  fit: BoxFit.cover,
-                                                );
-                                              }
-                                            },
-                                            shrinkWrap: true,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                // First Row
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Image.asset(
+                                                        'assets/drinksRes/img1.png',
+                                                        width: 45,
+                                                        height: 45),
+                                                    const SizedBox(width: 32),
+                                                    Image.asset(
+                                                        'assets/drinksRes/img5.png',
+                                                        width: 45,
+                                                        height: 45),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                    height:
+                                                        screenHeight * 0.01),
+                                                // Second Row
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    // Empty space to offset alignment
+                                                    const SizedBox(
+                                                      width: 2,
+                                                    ),
+                                                    Image.asset(
+                                                        'assets/drinksRes/img2.png',
+                                                        width: 45,
+                                                        height: 45),
+                                                    const SizedBox(width: 20),
+                                                    Image.asset(
+                                                        'assets/drinksRes/img4.png',
+                                                        width: 45,
+                                                        height: 45),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                    height:
+                                                        screenHeight * 0.01),
+                                                // Third Row
+                                                _drinkName ==
+                                                            "Pineapple Cooler" ||
+                                                        _drinkName ==
+                                                            "Berry Ice Tea"
+                                                    ? Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          const SizedBox(
+                                                              width: 12),
+                                                          Image.asset(
+                                                              'assets/drinksRes/img3.png',
+                                                              width: 45,
+                                                              height: 45),
+                                                        ],
+                                                      )
+                                                    : const SizedBox.shrink(),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
