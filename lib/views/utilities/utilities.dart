@@ -144,10 +144,8 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
     });
     try {
       final response = await http.get(Uri.parse(url));
-      if (response.statusCode == 200) {
-        _showSnackBar('Request successful!', Colors.black, Colors.white);
-      } else {
-        _showSnackBar('Request failed with status: ${response.statusCode}',
+      if (response.statusCode != 200) {
+       _showSnackBar('Request failed with status: ${response.statusCode}',
             Colors.black, Colors.white);
       }
     } catch (e) {
