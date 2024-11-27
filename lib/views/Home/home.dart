@@ -386,13 +386,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   children: [
                                                     Image.asset(
                                                         'assets/drinksRes/img1.png',
-                                                        width: 45,
-                                                        height: 45),
+                                                        width: 80,
+                                                        height: 80),
                                                     const SizedBox(width: 32),
                                                     Image.asset(
                                                         'assets/drinksRes/img5.png',
-                                                        width: 45,
-                                                        height: 45),
+                                                        width: 80,
+                                                        height: 80),
                                                   ],
                                                 ),
                                                 SizedBox(
@@ -409,13 +409,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     ),
                                                     Image.asset(
                                                         'assets/drinksRes/img2.png',
-                                                        width: 45,
-                                                        height: 45),
+                                                        width: 80,
+                                                        height: 80),
                                                     const SizedBox(width: 20),
                                                     Image.asset(
                                                         'assets/drinksRes/img4.png',
-                                                        width: 45,
-                                                        height: 45),
+                                                        width: 80,
+                                                        height: 80),
                                                   ],
                                                 ),
                                                 SizedBox(
@@ -435,8 +435,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               width: 12),
                                                           Image.asset(
                                                               'assets/drinksRes/img3.png',
-                                                              width: 45,
-                                                              height: 45),
+                                                              width: 80,
+                                                              height: 80),
                                                         ],
                                                       )
                                                     : const SizedBox.shrink(),
