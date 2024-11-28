@@ -87,6 +87,8 @@ class _HomeScreenState extends State<HomeScreen> {
           _preferencesService.updateStationStage(
               'station1DrinkName', currentDrink);
 
+          
+
           if (currentStage == 'Blending') {
             int milk = decodedEvent['data']['Milk'];
             int water = decodedEvent['data']['Water'];
