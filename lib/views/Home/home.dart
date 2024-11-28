@@ -87,7 +87,19 @@ class _HomeScreenState extends State<HomeScreen> {
           _preferencesService.updateStationStage(
               'station1DrinkName', currentDrink);
 
-          
+          if (currentStage == 'Order Accepted') {
+
+            setState(() {
+              _showSuccessScreen = true;
+            });
+            // Hide success screen after 5 seconds
+            Future.delayed(const Duration(seconds: 5), () {
+              setState(() {
+                _showSuccessScreen = false;
+              });
+            });
+
+          }
 
           if (currentStage == 'Blending') {
             int milk = decodedEvent['data']['Milk'];
@@ -157,18 +169,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
       try {
         final response = await http.get(uri);
-        if (response.statusCode == 200) {
-          setState(() {
-            _showSuccessScreen = true;
-          });
-          // Hide success screen after 5 seconds
-          Future.delayed(const Duration(seconds: 5), () {
-            setState(() {
-              _showSuccessScreen = false;
-            });
-          });
-        } else {
-          _showSnackBar("Failed to start processing: ${response.statusCode}");
+        if (response.statusCode != 200) {
+           _showSnackBar("Failed to start processing: ${response.statusCode}");
         }
       } catch (e) {
         _showSnackBar("Error occurred: $e");
