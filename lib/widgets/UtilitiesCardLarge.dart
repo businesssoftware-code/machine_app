@@ -74,7 +74,7 @@ class PrimingCard extends StatelessWidget {
                     Text('Milk', style: TextStyle(color: Colors.white, fontSize: 16)),
                     Text('Water', style: TextStyle(color: Colors.white, fontSize: 16)),
                     Text('Curd', style: TextStyle(color: Colors.white, fontSize: 16)),
-                    Text('Kool-M', style: TextStyle(color: Colors.white, fontSize: 16)),
+                    Text('Cool-M', style: TextStyle(color: Colors.white, fontSize: 16)),
                   ],
                 ),
                 SizedBox(height: screenHeight * 0.01),
