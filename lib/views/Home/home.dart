@@ -71,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
           int milk = decodedEvent['data']['Milk'];
           int water = decodedEvent['data']['Water'];
           int curd = decodedEvent['data']['Curd'];
-          int koolM = decodedEvent['data']['Kool-M'];
+          int koolM = decodedEvent['data']['Cool-M'];
           canPrepare = await canPrepareDrink(milk, water, curd, koolM);
           if (!canPrepare) {
             _showSnackBar2("Insufficient ingredients to prepare the drink.");
@@ -105,7 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
             int milk = decodedEvent['data']['Milk'];
             int water = decodedEvent['data']['Water'];
             int curd = decodedEvent['data']['Curd'];
-            int koolM = decodedEvent['data']['Kool-M'];
+            int koolM = decodedEvent['data']['Cool-M'];
             updateIngredientQuantities(milk, water, curd, koolM);
           }
           if (currentStage == 'Clear') {
@@ -123,11 +123,25 @@ class _HomeScreenState extends State<HomeScreen> {
           _preferencesService.updateStationStage(
               'station2DrinkName', currentDrink);
 
+          if (currentStage == 'Order Accepted') {
+
+            setState(() {
+              _showSuccessScreen = true;
+            });
+            // Hide success screen after 5 seconds
+            Future.delayed(const Duration(seconds: 5), () {
+              setState(() {
+                _showSuccessScreen = false;
+              });
+            });
+
+          }
+
           if (currentStage == 'Blending') {
             int milk = decodedEvent['data']['Milk'];
             int water = decodedEvent['data']['Water'];
             int curd = decodedEvent['data']['Curd'];
-            int koolM = decodedEvent['data']['Kool-M'];
+            int koolM = decodedEvent['data']['Cool-M'];
             updateIngredientQuantities(milk, water, curd, koolM);
           }
           if (currentStage == 'Clear') {
@@ -257,7 +271,7 @@ class _HomeScreenState extends State<HomeScreen> {
         'url': 'assets/liquids/curdFrame.png'
       },
       {
-        'name': 'Kool-M',
+        'name': 'Cool-M',
         'quantity': '10000',
         'url': 'assets/liquids/koolMFrame.png'
       }

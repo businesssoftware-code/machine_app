@@ -9,7 +9,7 @@ Future<bool> canPrepareDrink(int requiredMilk, int requiredWater,
   final milk = prefs.getInt('Milk') ?? 0;
   final water = prefs.getInt('Water') ?? 0;
   final curd = prefs.getInt('Curd') ?? 0;
-  final koolM = prefs.getInt('Kool-M') ?? 0;
+  final koolM = prefs.getInt('Cool-M') ?? 0;
 
   // Check if all required ingredients are available
   return (requiredMilk == 0 || (milk - 400) >= requiredMilk) &&
@@ -26,18 +26,18 @@ Future<void> updateIngredientQuantities(
   final milk = (prefs.getInt('Milk') ?? 0) - reqMilk;
   final water = (prefs.getInt('Water') ?? 0) - reqWater;
   final curd = (prefs.getInt('Curd') ?? 0) - reqCurd;
-  final koolM = (prefs.getInt('Kool-M') ?? 0) - reqkoolM;
+  final koolM = (prefs.getInt('Cool-M') ?? 0) - reqkoolM;
 
   await prefs.setInt('Milk', milk);
   await prefs.setInt('Water', water);
   await prefs.setInt('Curd', curd);
-  await prefs.setInt('Kool-M', koolM);
+  await prefs.setInt('Cool-M', koolM);
 
   quantityNotifier.value = {
     'Milk': milk,
     'Water': water,
     'Curd': curd,
-    'Kool-M': koolM,
+    'Cool-M': koolM,
   };
 
   // // Recheck availability after update

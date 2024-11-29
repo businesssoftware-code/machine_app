@@ -97,7 +97,7 @@ class _LocalRecipeScreenState extends State<LocalRecipeScreen> {
         int milk = decodedEvent['data']['Milk'];
         int water = decodedEvent['data']['Water'];
         int curd = decodedEvent['data']['Curd'];
-        int koolM = decodedEvent['data']['Kool-M'];
+        int koolM = decodedEvent['data']['Cool-M'];
         bool canPrepare = await canPrepareDrink(milk, water, curd, koolM);
         // if (!canPrepare) {
         //   _showSnackBar2("Insufficient ingredients to prepare the drink.");
@@ -130,7 +130,7 @@ class _LocalRecipeScreenState extends State<LocalRecipeScreen> {
           int milk = decodedEvent['data']['Milk'];
           int water = decodedEvent['data']['Water'];
           int curd = decodedEvent['data']['Curd'];
-          int koolM = decodedEvent['data']['Kool-M'];
+          int koolM = decodedEvent['data']['Cool-M'];
           updateIngredientQuantities(milk, water, curd, koolM);
         }
         if (currentStage == 'Clear') {
@@ -151,7 +151,7 @@ class _LocalRecipeScreenState extends State<LocalRecipeScreen> {
           int milk = decodedEvent['data']['Milk'];
           int water = decodedEvent['data']['Water'];
           int curd = decodedEvent['data']['Curd'];
-          int koolM = decodedEvent['data']['Kool-M'];
+          int koolM = decodedEvent['data']['Cool-M'];
           updateIngredientQuantities(milk, water, curd, koolM);
         }
         if (currentStage == 'Clear') {

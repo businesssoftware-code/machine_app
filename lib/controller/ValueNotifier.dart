@@ -5,7 +5,7 @@ final quantityNotifier = ValueNotifier<Map<String, int>>({});
 
 Future<void> loadInitialQuantities() async {
   final prefs = await SharedPreferences.getInstance();
-  final keys = ['Milk', 'Water', 'Curd', 'Kool-M'];
+  final keys = ['Milk', 'Water', 'Curd', 'Cool-M'];
   Map<String, int> quantities = {};
 
   for (var key in keys) {

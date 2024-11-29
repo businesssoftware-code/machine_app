@@ -61,7 +61,7 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
         int milk = decodedEvent['data']['Milk'];
         int water = decodedEvent['data']['Water'];
         int curd = decodedEvent['data']['Curd'];
-        int koolM = decodedEvent['data']['Kool-M'];
+        int koolM = decodedEvent['data']['Cool-M'];
         bool canPrepare = await canPrepareDrink(milk, water, curd, koolM);
 
         // Use menuController to update route
@@ -88,7 +88,7 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
           int milk = decodedEvent['data']['Milk'];
           int water = decodedEvent['data']['Water'];
           int curd = decodedEvent['data']['Curd'];
-          int koolM = decodedEvent['data']['Kool-M'];
+          int koolM = decodedEvent['data']['Cool-M'];
           updateIngredientQuantities(milk, water, curd, koolM);
         }
 
@@ -110,7 +110,7 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
           int milk = decodedEvent['data']['Milk'];
           int water = decodedEvent['data']['Water'];
           int curd = decodedEvent['data']['Curd'];
-          int koolM = decodedEvent['data']['Kool-M'];
+          int koolM = decodedEvent['data']['Cool-M'];
           updateIngredientQuantities(milk, water, curd, koolM);
         }
 
@@ -273,7 +273,7 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
                             button2Label: 'Start',
                             onButton2Pressed: () {
                               _sendApiRequest(
-                                  'http://192.168.0.65:3001/dailyPriming');
+                                  'http://192.168.0.65:3001/simulateScanner?recipe=Priming');
                             },
                           ),
                           MachineOperationCard(
@@ -298,23 +298,23 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
                         imageUrl: 'assets/priming.png',
                         onStartPressed: [
                           () => _sendApiRequest(
+                              'http://192.168.0.65:3001/liquids?liqNum=4&liqAction=start'),
+                          () => _sendApiRequest(
                               'http://192.168.0.65:3001/liquids?liqNum=1&liqAction=start'),
                           () => _sendApiRequest(
+                              'http://192.168.0.65:3001/liquids?liqNum=6&liqAction=start'),
+                          () => _sendApiRequest(
                               'http://192.168.0.65:3001/liquids?liqNum=2&liqAction=start'),
-                          () => _sendApiRequest(
-                              'http://192.168.0.65:3001/liquids?liqNum=3&liqAction=start'),
-                          () => _sendApiRequest(
-                              'http://192.168.0.65:3001/liquids?liqNum=4&liqAction=start'),
                         ],
                         onStopPressed: [
                           () => _sendApiRequest(
+                              'http://192.168.0.65:3001/liquids?liqNum=4&liqAction=stop'),
+                          () => _sendApiRequest(
                               'http://192.168.0.65:3001/liquids?liqNum=1&liqAction=stop'),
                           () => _sendApiRequest(
+                              'http://192.168.0.65:3001/liquids?liqNum=6&liqAction=stop'),
+                          () => _sendApiRequest(
                               'http://192.168.0.65:3001/liquids?liqNum=2&liqAction=stop'),
-                          () => _sendApiRequest(
-                              'http://192.168.0.65:3001/liquids?liqNum=3&liqAction=stop'),
-                          () => _sendApiRequest(
-                              'http://192.168.0.65:3001/liquids?liqNum=4&liqAction=stop'),
                         ],
                       ),
                     ],

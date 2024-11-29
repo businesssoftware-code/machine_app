@@ -29,7 +29,7 @@ class _RefillingLiquidState extends State<RefillingLiquid> {
     {'name': 'Milk', 'quantity': '10000', 'url': 'assets/refil/milkR.png'},
     {'name': 'Water', 'quantity': '10000', 'url': 'assets/refil/waterr.png'},
     {'name': 'Curd', 'quantity': '10000', 'url': 'assets/refil/curdr.png'},
-    {'name': 'Kool-M', 'quantity': '10000', 'url': 'assets/refil/koolmR.png'}
+    {'name': 'Cool-M', 'quantity': '10000', 'url': 'assets/refil/koolmR.png'}
   ];
   final String _webSocketUrl = 'ws://192.168.0.65:3003';
 
@@ -83,7 +83,7 @@ class _RefillingLiquidState extends State<RefillingLiquid> {
         int milk = decodedEvent['data']['Milk'];
         int water = decodedEvent['data']['Water'];
         int curd = decodedEvent['data']['Curd'];
-        int koolM = decodedEvent['data']['Kool-M'];
+        int koolM = decodedEvent['data']['Cool-M'];
         bool canPrepare = await canPrepareDrink(milk, water, curd, koolM);
         // if (!canPrepare) {
         //   _showSnackBar2("Insufficient ingredients to prepare the drink.");
@@ -113,7 +113,7 @@ class _RefillingLiquidState extends State<RefillingLiquid> {
           int milk = decodedEvent['data']['Milk'];
           int water = decodedEvent['data']['Water'];
           int curd = decodedEvent['data']['Curd'];
-          int koolM = decodedEvent['data']['Kool-M'];
+          int koolM = decodedEvent['data']['Cool-M'];
           updateIngredientQuantities(milk, water, curd, koolM);
         }
 
@@ -135,7 +135,7 @@ class _RefillingLiquidState extends State<RefillingLiquid> {
           int milk = decodedEvent['data']['Milk'];
           int water = decodedEvent['data']['Water'];
           int curd = decodedEvent['data']['Curd'];
-          int koolM = decodedEvent['data']['Kool-M'];
+          int koolM = decodedEvent['data']['Cool-M'];
           updateIngredientQuantities(milk, water, curd, koolM);
         }
 
