@@ -24,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isConnected = false;
   bool isLoading = false;
   bool _showSuccessScreen = false;
-  final String _webSocketUrl = 'ws://192.168.0.65:3003';
+  final String _webSocketUrl = 'ws://192.168.98.65:3003';
   String? _drinkName;
   bool _showScanner = true;
   bool canPrepare = false;
@@ -175,7 +175,7 @@ class _HomeScreenState extends State<HomeScreen> {
       isLoading = true;
     });
 
-    const String apiUrl = 'http://192.168.0.65:3001/recipe_to_local';
+    const String apiUrl = 'http://192.168.98.65:3001/recipe_to_local';
     final drinkName = _drinkName;
 
     if (drinkName != null) {

@@ -24,7 +24,7 @@ class _LocalRecipeCardState extends State<LocalRecipeCard> {
       isLoading = true;
     });
 
-    const String apiUrl = 'http://192.168.0.65:3001/simulateScanner';
+    const String apiUrl = 'http://192.168.98.65:3001/simulateScanner';
     final Uri uri = Uri.parse('$apiUrl?recipe=$drinkName');
 
     try {

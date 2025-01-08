@@ -6,8 +6,10 @@ class MachineOperationCard extends StatelessWidget {
   final String imageUrl;
   final String? button1Label;
   final String button2Label;
+  final String? button3Label;
   final VoidCallback? onButton1Pressed;
   final VoidCallback onButton2Pressed;
+  final VoidCallback? onButton3Pressed;
 
   const MachineOperationCard({
     super.key,
@@ -17,6 +19,8 @@ class MachineOperationCard extends StatelessWidget {
     required this.button2Label,
      this.onButton1Pressed,
     required this.onButton2Pressed,
+    this.button3Label,
+    this.onButton3Pressed,
   });
 
   @override
@@ -75,7 +79,16 @@ class MachineOperationCard extends StatelessWidget {
                 SizedBox(width: screenWidth * 0.02), // Space between buttons
 
               ], 
+
               _buildButton(button2Label, onButton2Pressed,context),
+              
+
+              if(button3Label != null && onButton3Pressed != null)...[
+                 SizedBox(width: screenWidth * 0.02),// Space between buttons
+                _buildButton(button3Label! , onButton3Pressed!,context),
+                
+
+              ], 
             ],
           ),
         ],

@@ -38,7 +38,7 @@ class _LocalRecipeScreenState extends State<LocalRecipeScreen> {
     {'name': 'Choco Protein', 'url': 'assets/local/chocoProtein.png'},
   ];
 
-  final String _webSocketUrl = 'ws://192.168.0.65:3003';
+  final String _webSocketUrl = 'ws://192.168.98.65:3003';
   Map<String, String> stationStages = {
     'station1': 'vacant',
     'station2': 'vacant',

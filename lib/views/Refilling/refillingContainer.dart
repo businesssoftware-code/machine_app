@@ -31,7 +31,7 @@ class _RefillingLiquidState extends State<RefillingLiquid> {
     {'name': 'Curd', 'quantity': '10000', 'url': 'assets/refil/curdr.png'},
     {'name': 'Cool-M', 'quantity': '10000', 'url': 'assets/refil/koolmR.png'}
   ];
-  final String _webSocketUrl = 'ws://192.168.0.65:3003';
+  final String _webSocketUrl = 'ws://192.168.98.65:3003';
 
   @override
   void initState() {
