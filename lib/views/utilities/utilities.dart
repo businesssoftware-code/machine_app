@@ -34,7 +34,7 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
     'station2': 'vacant',
   };
 
-  final String _webSocketUrl = 'ws://192.168.0.65:3003';
+  final String _webSocketUrl = 'ws://192.168.98.65:3003';
 
   @override
   void initState() {
@@ -251,7 +251,7 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
                             imageUrl: 'assets/blender.png',
                             onStartPressed: () {
                               _sendApiRequest(
-                                  'http://192.168.0.65:3001/blender_clean');
+                                  'http://192.168.98.65:3001/blender_clean');
                             },
                           ),
                           UtilitiesCardSmall(
@@ -259,7 +259,7 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
                             imageUrl: 'assets/homing.png',
                             onStartPressed: () {
                               _sendApiRequest(
-                                  'http://192.168.0.65:3001/homing');
+                                  'http://192.168.98.65:3001/homing');
                             },
                           ),
                         ],
@@ -273,22 +273,29 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
                             button2Label: 'Start',
                             onButton2Pressed: () {
                               _sendApiRequest(
-                                  'http://192.168.0.65:3001/simulateScanner?recipe=Priming');
+                                  'http://192.168.98.65:3001/simulateScanner?recipe=Priming');
                             },
                           ),
                           MachineOperationCard(
                             title: 'Machine',
                             imageUrl: 'assets/machine.png',
-                            button1Label: 'Active',
+                            button1Label: 'Refx Clean',
                             button2Label: 'Inactive',
+                            button3Label:"Glass Clean",
+
                             onButton1Pressed: () {
                               _sendApiRequest(
-                                  'http://192.168.0.65:3001/machineStatus?status=active');
+                                  'http://192.168.98.65:3001/refxClean');
                             },
                             onButton2Pressed: () {
                               _sendApiRequest(
-                                  'http://192.168.0.65:3001/machineStatus?status=inactive');
+                                  'http://192.168.98.65:3001/machineStatus?status=inactive');
                             },
+                            onButton3Pressed: () {
+                              _sendApiRequest(
+                                  'http://192.168.98.65:3001/simulateScanner?recipe=Glass Clean');
+                            },
+
                           ),
                         ],
                       ),
@@ -298,23 +305,23 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
                         imageUrl: 'assets/priming.png',
                         onStartPressed: [
                           () => _sendApiRequest(
-                              'http://192.168.0.65:3001/liquids?liqNum=4&liqAction=start'),
+                              'http://192.168.98.65:3001/liquids?liqNum=4&liqAction=start'),
                           () => _sendApiRequest(
-                              'http://192.168.0.65:3001/liquids?liqNum=1&liqAction=start'),
+                              'http://192.168.98.65:3001/liquids?liqNum=1&liqAction=start'),
                           () => _sendApiRequest(
-                              'http://192.168.0.65:3001/liquids?liqNum=6&liqAction=start'),
+                              'http://192.168.98.65:3001/liquids?liqNum=6&liqAction=start'),
                           () => _sendApiRequest(
-                              'http://192.168.0.65:3001/liquids?liqNum=2&liqAction=start'),
+                              'http://192.168.98.65:3001/liquids?liqNum=2&liqAction=start'),
                         ],
                         onStopPressed: [
                           () => _sendApiRequest(
-                              'http://192.168.0.65:3001/liquids?liqNum=4&liqAction=stop'),
+                              'http://192.168.98.65:3001/liquids?liqNum=4&liqAction=stop'),
                           () => _sendApiRequest(
-                              'http://192.168.0.65:3001/liquids?liqNum=1&liqAction=stop'),
+                              'http://192.168.98.65:3001/liquids?liqNum=1&liqAction=stop'),
                           () => _sendApiRequest(
-                              'http://192.168.0.65:3001/liquids?liqNum=6&liqAction=stop'),
+                              'http://192.168.98.65:3001/liquids?liqNum=6&liqAction=stop'),
                           () => _sendApiRequest(
-                              'http://192.168.0.65:3001/liquids?liqNum=2&liqAction=stop'),
+                              'http://192.168.98.65:3001/liquids?liqNum=2&liqAction=stop'),
                         ],
                       ),
                     ],
