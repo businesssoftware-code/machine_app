@@ -324,6 +324,33 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
                               'http://192.168.98.65:3001/liquids?liqNum=2&liqAction=stop'),
                         ],
                       ),
+
+                      SizedBox(height: screenHeight * 0.01),
+                      PrimingCard(
+                        title: 'Cleaning',
+                        imageUrl: 'assets/priming.png',
+                        onStartPressed: [
+                          () => _sendApiRequest(
+                              'http://192.168.98.65:3001/cleaning?liqNum=4&liqAction=start'),
+                          () => _sendApiRequest(
+                              'http://192.168.98.65:3001/cleaning?liqNum=1&liqAction=start'),
+                          () => _sendApiRequest(
+                              'http://192.168.98.65:3001/cleaning?liqNum=6&liqAction=start'),
+                          () => _sendApiRequest(
+                              'http://192.168.98.65:3001/cleaning?liqNum=2&liqAction=start'),
+                        ],
+                        onStopPressed: [
+                          () => _sendApiRequest(
+                              'http://192.168.98.65:3001/cleaning?liqNum=4&liqAction=stop'),
+                          () => _sendApiRequest(
+                              'http://192.168.98.65:3001/cleaning?liqNum=1&liqAction=stop'),
+                          () => _sendApiRequest(
+                              'http://192.168.98.65:3001/cleaning?liqNum=6&liqAction=stop'),
+                          () => _sendApiRequest(
+                              'http://192.168.98.65:3001/cleaning?liqNum=2&liqAction=stop'),
+                        ],
+                      ),
+
                     ],
                   ),
                 ),
